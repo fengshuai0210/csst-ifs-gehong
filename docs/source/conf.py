@@ -2,7 +2,7 @@
 
 # -- Project information
 
-project = 'Gehong'
+project = 'csst-ifs-gehong'
 copyright = '2022, S.Feng'
 author = 'Shuai Feng'
 
