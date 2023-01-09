@@ -11,11 +11,10 @@ To use Lumache, first install it using pip:
 .. code-block:: console
 $ pip install csst-ifs-gehong
 
-Creating recipes
+Model the emission lines
 ----------------
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+First, you can use the ``gehong.EmissionLineTemplate()`` function to load the information of emission lines, such as the line list. 
 
 .. autofunction:: lumache.get_random_ingredients
 
