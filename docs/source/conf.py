@@ -6,8 +6,8 @@ project = 'csst-ifs-gehong'
 copyright = '2022, S.Feng'
 author = 'Shuai Feng'
 
-release = '0.1'
-version = '0.1.0'
+release = '0.0.1'
+version = '0.0.1'
 
 # -- General configuration
 

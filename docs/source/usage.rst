@@ -6,12 +6,13 @@ Usage
 Installation
 ------------
 
-To use Lumache, first install it using pip:
+To use ``csst-ifs-gehong``, first install it using ``pip``:
 
 .. code-block:: console
+
 $ pip install csst-ifs-gehong
 
-Model the emission lines
+Modelling of 1-dementional spectrum
 ----------------
 
 First, you can use the ``gehong.EmissionLineTemplate()`` function to load the information of emission lines, such as the line list. 

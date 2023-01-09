@@ -1,9 +1,9 @@
 Welcome to Gehong's documentation!
 ===================================
 
-**Gehong** is a Python library for modelling the data of intergral field spectrascopy of 
-Chinese Space Station Telescopy (CSST-IFS). This library can also be used for modelling the data of
-other IFS instrument. 
+**Gehong** is a Python package for modelling the data of intergral field spectrascopy mounted on the
+Chinese Space Station Telescopy (CSST-IFS). This package can also be used for modelling the data of
+other IFS instruments. 
 
 Check out the :doc:`usage` section for further information, including
 how to :ref:`installation` the project.
