@@ -1,18 +1,7 @@
-Usage
+Spec1D
 =====
 
-.. _installation:
-
-Installation
-------------
-
-To use ``csst-ifs-gehong``, first install it using ``pip``:
-
-.. code-block:: console
-
-$ pip install csst-ifs-gehong
-
-Modelling of 1-dementional spectrum
+Emission Lines of Ionized Gas
 ----------------
 
 First, you can use the ``gehong.EmissionLineTemplate()`` function to load the information of emission lines, such as the line list. 
@@ -31,3 +20,11 @@ For example:
 >>> lumache.get_random_ingredients()
 ['shells', 'gorgonzola', 'parsley']
 
+Stellar Continuum of Galaxies
+----------------
+
+Spectrum of Single Stellar
+----------------
+
+Spectrum of AGN Components
+----------------

@@ -17,5 +17,8 @@ Contents
 
 .. toctree::
 
-   usage
+   installation
+   spec1d
+   map2d
+   cube3d
    api
