@@ -1,7 +1,18 @@
-Spec1D
+Usage
 =====
 
-Emission Lines of Ionized Gas
+.. _installation:
+
+Installation
+------------
+
+To use ``csst-ifs-gehong``, first install it using ``pip``:
+
+.. code-block:: console
+
+$ pip install csst-ifs-gehong
+
+Modelling of 1-dimentional Spectra
 ----------------
 
 First, you can use the ``gehong.EmissionLineTemplate()`` function to load the information of emission lines, such as the line list. 

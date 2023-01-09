@@ -10,15 +10,12 @@ how to :ref:`installation` the project.
 
 .. note::
 
-   This project is under active development.
+   This project is not ready.
 
 Contents
 --------
 
 .. toctree::
 
-   installation
-   spec1d
-   map2d
-   cube3d
+   usage
    api
