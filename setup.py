@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="csst-ifs-gehong",                                     
-    version="0.0.1",                                        
+    version="0.0.0.1",                                        
     author="Shuai Feng",                                    
     author_email="sfeng@hebtu.edu.cn",                      
     description="A Python package for IFS data modelling",                            
@@ -18,4 +18,12 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",           
         "Operating System :: OS Independent",               
     ],
+    package_dir={'gehong': 'gehong'},
+    package_data={'gehong': ['data/*.fits']},
+    install_requires=[
+        'numpy',
+        'scipy',
+        'matplotlib',
+        'astropy',
+    ]
 )
