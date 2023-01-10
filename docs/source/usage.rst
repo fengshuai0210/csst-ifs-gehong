@@ -12,30 +12,42 @@ To use ``csst-ifs-gehong``, first install it using ``pip``:
 
 $ pip install csst-ifs-gehong
 
-Modelling of 1-dimentional Spectra
+Execution
 ----------------
 
-First, you can use the ``gehong.EmissionLineTemplate()`` function to load the information of emission lines, such as the line list. 
+1-D Spectrum
+~~~~~~~~~~~~~~~~
 
-.. autofunction:: lumache.get_random_ingredients
+``sed``
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
+Emission Line from Ionized Gas
+++++++++++++++++++++++++++++++
 
-.. autoexception:: lumache.InvalidKindError
+``sed.IonizedGas``
 
-For example:
+Continuum of Stellar Population in Galaxies
++++++++++++++++++++++++++++++++++++++++++++
 
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
-
-Stellar Continuum of Galaxies
-----------------
+``sed.StellarPop``
 
 Spectrum of Single Stellar
-----------------
+++++++++++++++++++++++++++
 
-Spectrum of AGN Components
-----------------
+``sed.SingleStellar``
+
+Spectrum of AGNs
+++++++++++++++++
+
+``sed.AGN``
+
+2-D Map
+~~~~~~~
+
+Non-parametric Map
+++++++++++++++++++
+
+Parametric Map
+++++++++++++++
+
+3-D Cube
+~~~~~~~~
