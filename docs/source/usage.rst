@@ -18,30 +18,32 @@ Execution
 1-D Spectrum
 ~~~~~~~~~~~~~~~~
 
-``sed``
+``spec1d``
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
 
-``sed.IonizedGas``
+``spec1d.IonizedGas``
 
 Continuum of Stellar Population in Galaxies
 +++++++++++++++++++++++++++++++++++++++++++
 
-``sed.StellarPop``
+``spec1d.StellarPop``
 
 Spectrum of Single Stellar
 ++++++++++++++++++++++++++
 
-``sed.SingleStellar``
+``spec1d.SingleStellar``
 
 Spectrum of AGNs
 ++++++++++++++++
 
-``sed.AGN``
+``spec1d.AGN``
 
 2-D Map
 ~~~~~~~
+
+``map2d``
 
 Non-parametric Map
 ++++++++++++++++++
@@ -49,5 +51,13 @@ Non-parametric Map
 Parametric Map
 ++++++++++++++
 
+Surface-brightness Map
+
+Velocity Map
+
+Stellar Population (Age and Metallicity) Map
+
 3-D Cube
 ~~~~~~~~
+
+``cube3d``
