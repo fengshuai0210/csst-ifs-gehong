@@ -18,12 +18,14 @@ Execution
 1-D Spectrum
 ~~~~~~~~~~~~~~~~
 
-``spec1d``
+``spec1d``: The module for the modelling of single spectra, including the spectrum of single star, stellar continuum of galaxies, 
+emission lines of ionized gas (such as HII region), spectra of AGN. This module also includes some tools for spectral modelling, such 
+flux calibration, reddening of dust attenuation. 
 
 Template of Emission Lines
 ++++++++++++++++++++++++++
 
-``spec1d.IonizedGas``
+``spec1d.EmissionLineTemplate``
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
