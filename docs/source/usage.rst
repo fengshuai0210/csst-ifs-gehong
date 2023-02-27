@@ -6,7 +6,7 @@ Usage
 Installation
 ------------
 
-To use ``csst-ifs-gehong``, first install it using ``pip``:
+To use ``csst-ifs-gehong``, first install it using ``pip`` (This is not available.):
 
 .. code-block:: console
 
@@ -19,6 +19,11 @@ Execution
 ~~~~~~~~~~~~~~~~
 
 ``spec1d``
+
+Template of Emission Lines
+++++++++++++++++++++++++++
+
+``spec1d.IonizedGas``
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
