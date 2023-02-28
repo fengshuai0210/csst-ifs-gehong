@@ -30,11 +30,11 @@ Template of Emission Lines
 **class** EmissionLineTemplate(self, lam_range = [500, 15000], dlam = 0.1, model = 'fsps', FWHM_inst = 0.5):
 
 *Parameters:*
-- lam_range  : the wavelength range of templates ([lower limit, upper limit]), default is [500, 15000]
-- dlam       : the wavelength interval of template (unit A), default is 0.1A
-- model      : the model of emission line flux ratio, including ('fsps', 'cigale', 'SDSS'), default is 'fsps'
-- FWHM_inst  : the FWHM of instrument, default is 0.5
- 
+* lam_range  : the wavelength range of templates ([lower limit, upper limit]), default is [500, 15000]
+* dlam       : the wavelength interval of template (unit A), default is 0.1A
+* model      : the model of emission line flux ratio, including ('fsps', 'cigale', 'SDSS'), default is 'fsps'
+* FWHM_inst  : the FWHM of instrument, default is 0.5
+
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
