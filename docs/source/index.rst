@@ -20,4 +20,10 @@ Contents
 
    usage
    example
-   api
+
+----
+.. toctree::
+   :caption: API
+   :maxdepth: 2
+
+   GEHONG Modules <api/modules>
