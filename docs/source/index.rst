@@ -16,10 +16,14 @@ for modelling spectrascopy
 Contents
 --------
 
-.. toctree::
+ .. toctree::
+   :caption: Usage
+   :maxdepth: 1
 
-   usage
-   example
+   installation
+   execution
+   plan
+   development
 
 ----
 .. toctree::
