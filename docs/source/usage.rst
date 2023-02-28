@@ -36,6 +36,10 @@ Template of Emission Lines
 * FWHM_inst  : the FWHM of instrument, default is 0.5
 
 
+Preparing a class of emission line template. 
+
+.. code-block:: console emline_temp = spec1d.EmissionLineTemplate(model = 'fsps')
+
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
 
