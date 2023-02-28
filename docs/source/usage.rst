@@ -38,7 +38,8 @@ Template of Emission Lines
 
 Preparing a class of emission line template. 
 
-.. code-block:: console emline_temp = spec1d.EmissionLineTemplate(model = 'fsps')
+.. code-block:: console 
+    emline_temp = spec1d.EmissionLineTemplate(model = 'fsps')
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
