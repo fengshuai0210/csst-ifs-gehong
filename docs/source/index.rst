@@ -5,8 +5,9 @@ Welcome to Gehong's documentation!
 Chinese Space Station Telescopy (CSST-IFS). This package can also be used for modelling the data of
 other IFS instruments. 
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+Check out the :doc:`usage` section for the function of modules, including
+how to :ref:`installation` the project. Check out the :doc:`example` section 
+for modelling spectrascopy
 
 .. note::
 
@@ -18,4 +19,5 @@ Contents
 .. toctree::
 
    usage
+   example
    api
