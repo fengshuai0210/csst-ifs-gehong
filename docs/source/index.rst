@@ -30,4 +30,4 @@ Contents
    :caption: API
    :maxdepth: 2
 
-   GEHONG Modules <api/modules>
+   GEHONG Modules <api/module>
