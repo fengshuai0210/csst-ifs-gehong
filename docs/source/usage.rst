@@ -9,8 +9,8 @@ Installation
 To use ``csst-ifs-gehong``, first install it using ``pip`` (This is not available.):
 
 .. code-block:: console
-
-$ pip install csst-ifs-gehong
+    
+    $ pip install csst-ifs-gehong
 
 Execution
 ----------------
@@ -39,7 +39,7 @@ Template of Emission Lines
 Preparing a class of emission line template. 
 
 .. code-block:: Python
-    
+
     emline_temp = spec1d.EmissionLineTemplate(model = 'fsps')
 
 Emission Line from Ionized Gas
