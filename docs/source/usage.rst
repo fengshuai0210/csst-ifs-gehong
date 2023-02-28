@@ -25,7 +25,9 @@ flux calibration, reddening of dust attenuation.
 Template of Emission Lines
 ++++++++++++++++++++++++++
 
-``spec1d.EmissionLineTemplate``
+``spec1d.EmissionLineTemplate``: The module for preparing the template of emission line. 
+
+*class* EmissionLineTemplate(self, lam_range = [500, 15000], dlam = 0.1, flux_table = 'fsps', FWHM_inst = 0.5):
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
