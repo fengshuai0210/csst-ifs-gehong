@@ -16,9 +16,11 @@ for modelling spectrascopy
 Contents
 --------
 
- .. toctree::
-   :caption: Usage
-   :maxdepth: 1
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   about
 
    installation
    execution
