@@ -9,8 +9,8 @@ Installation
 To use ``csst-ifs-gehong``, first install it using ``pip`` (This is not available.):
 
 .. code-block:: console
-    
-    $ pip install csst-ifs-gehong
+
+$ pip install csst-ifs-gehong
 
 Execution
 ----------------
@@ -18,29 +18,14 @@ Execution
 1-D Spectrum
 ~~~~~~~~~~~~~~~~
 
-``spec1d``: The module for the modelling of single spectra, including the spectrum of single star, stellar continuum of galaxies, 
+The ``spec1d`` module for the modelling of single spectra, including the spectrum of single star, stellar continuum of galaxies, 
 emission lines of ionized gas (such as HII region), spectra of AGN. This module also includes some tools for spectral modelling, such 
 flux calibration, reddening of dust attenuation. 
 
 Template of Emission Lines
 ++++++++++++++++++++++++++
 
-``spec1d.EmissionLineTemplate``: The module for preparing the template of emission line. 
-
-**class** EmissionLineTemplate(self, lam_range = [500, 15000], dlam = 0.1, model = 'fsps', FWHM_inst = 0.5):
-
-*Parameters:*
-* lam_range  : the wavelength range of templates ([lower limit, upper limit]), default is [500, 15000]
-* dlam       : the wavelength interval of template (unit A), default is 0.1A
-* model      : the model of emission line flux ratio, including ('fsps', 'cigale', 'SDSS'), default is 'fsps'
-* FWHM_inst  : the FWHM of instrument, default is 0.5
-
-
-Preparing a class of emission line template. 
-
-.. code-block:: Python
-
-    emline_temp = spec1d.EmissionLineTemplate(model = 'fsps')
+The ``spec1d.EmissionLineTemplate``
 
 Emission Line from Ionized Gas
 ++++++++++++++++++++++++++++++
