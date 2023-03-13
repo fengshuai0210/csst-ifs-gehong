@@ -22,8 +22,8 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
    :caption: Contents:
 
    usage
-   example
    algorithm
+   example
    api/api.rst
 
 
