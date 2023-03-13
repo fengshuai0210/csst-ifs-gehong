@@ -9,7 +9,7 @@ Spectra of narrow line region
 
 First, preparing the class of emission line templates.
 
-.. code-block:: Python
+.. code-block:: python
 
     import csst-ifs-gehong.spec1d as s
     nlr_tem = s.EmissionLineTemplate(flux_table = 'nlr')
