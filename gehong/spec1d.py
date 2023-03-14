@@ -1,4 +1,4 @@
-import numpy as np
+#import numpy as np
 
 def calibrate(wave, flux, mag, filtername='/Users/sfeng/Fastro/Projects/CSST/MCI/SLOAN_SDSS.r'):
     """

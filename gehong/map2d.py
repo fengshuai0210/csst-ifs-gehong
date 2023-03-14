@@ -1,13 +1,11 @@
 from __future__ import division
 
-import scipy.special as sp
-import numpy as np
-from astropy.io import fits
+#import scipy.special as sp
+#import numpy as np
+#from astropy.io import fits
 
 POS_EPSILON = 1e-8
 SERSIC_OVERSAMPLE = 101
-
-import numpy as np
 
 class Grid(object):
 
