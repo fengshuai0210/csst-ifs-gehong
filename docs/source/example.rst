@@ -4,6 +4,13 @@ Example
 Model A Spectra of AGN
 ----------------------
 
+**Spectra Components**
+
+* Narrow line region
+* Broad line region
+* Power law
+* FeII emission lines
+
 Spectra of narrow line region
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
