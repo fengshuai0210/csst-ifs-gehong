@@ -27,11 +27,15 @@ of each emission line. The final spectrum of BLR is the sum of those emission li
 four Balmer lines (from Halpha to Hdelta). The emission line ratio is fixed and adopted as the result of 
 `Ilić et al. (2006) <https://ui.adsabs.harvard.edu/abs/2006MNRAS.371.1610I/abstract>`_, which is the measurement for a Seyfert 1.5 galaxy, Mrk 817. 
 The profile of BLR emission lines are determined by FWHM of Hbeta emission line, which is adopted as the input parameter in our code. The flux of 
-emission lines are determined by the 
+emission lines are determined by the total flux of Hbeta emission line. 
 
-宽线区发射线的谱形由宽线Hβ的积分流量、宽线Hβ的FWHM两个参数决定。（由于宽线区的绝对流量由宽线Hβ积分流量决定，因此宽线区发射线与FeII发射线流量相关）
-
-* The spectrum of narrow line region contains 
+* The spectrum of narrow line region contains a series of emission lines of ionized gas, which not only includes hydrogen emission lines but also 
+considers those of metals. The model of emissio line flux is adopted as the result of 
+`Feltre et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016MNRAS.456.3354F/abstract>`_, which is calculated by the cloudy. In optical range, this
+model contains [OIII]5007, [NII]6583 ... In this model, the flux ratio of emission lines are determined by a series parameters, such as gas-phase metallicity, 
+ionized paramter, metal-to-dust ratio, column density of neutral hydrogen, spectrum index of UV photon. For simplisity, we only use the 
+gas-phase metallicity as the input parameter to determine the flux ratio of emission lines. The other input parameters are similar with the modelling
+of HII region spectrum, such as total flux of Halpha. 
 
 Spectrum of Single Stellar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
