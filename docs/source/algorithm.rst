@@ -19,6 +19,13 @@ the code need a magnitude at given band (e.g. SDSS r-band) as an input parameter
 Spectrum of AGN
 ~~~~~~~~~~~~~~~
 
+The modelling of AGN spectrum comprises parts: spectrum of broad line region (BLR), spectrum of narrow line region (NLR), spectrum of 
+power law, spectrum of FeII line. The final spectrum of AGN is the combination of above four parts. 
+
+1. The spectrum of broad line region only contains the broad emission line of ionized hydrogen. We use gaussion profile to represent the profile
+of each emission line. The final spectrum of BLR is the The emission line ratio is fixed and adopted 
+by the 
+
 Spectrum of Single Stellar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
