@@ -19,6 +19,17 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
+   :caption: Algorithm
+
+   algorithm/gas.rst
+   algorithm/stellar.rst
+   algorithm/agn.rst
+   algorithm/star.rst
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
    :caption: Contents:
 
    usage
