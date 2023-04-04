@@ -1,5 +1,5 @@
-AGN
-===
+Spectrum of AGN
+===============
 
 The modelling of AGN spectrum comprises parts: 
 
