@@ -23,9 +23,9 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
    :hidden:
    :caption: Algorithm
 
-   algorithm/sed.rst
-   algorithm/map.rst
-   algorithm/cube.rst
+   algorithm/sed/sed.rst
+   algorithm/map/map.rst
+   algorithm/cube/cube.rst
 
 .. toctree::
    :hidden:
