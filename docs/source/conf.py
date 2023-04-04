@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../../gehong/'))
 # -- Project information -----------------------------------------------------
 
 project = 'csst-ifs-gehong'
-copyright = '2023, Shuai Feng'
+copyright = '2023, CSST-IFS Team'
 author = 'Shuai Feng'
 
 # The full version, including alpha/beta/rc tags

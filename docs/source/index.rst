@@ -37,10 +37,20 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
    example
    api/api.rst
 
-
 Indices and tables
 ------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+----
+
+:Author: Shuai Feng
+:Institute: Hebei Normal University
+:Contact: sfeng@hebtu.edu.cn
+:Last updated: 2023-04-30
+:Version: 0.0.1
+:Copyright: CSST-IFS Team
+
+----
