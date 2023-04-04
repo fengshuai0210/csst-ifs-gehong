@@ -411,4 +411,3 @@ class StellarMap(Map2d):
 from skimage.transform import resize
 def load_image(array2d, shape):
     return resize(array2d,(shape[0],shape[1]))
-    #return array2d
