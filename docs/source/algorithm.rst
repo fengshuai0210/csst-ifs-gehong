@@ -63,14 +63,7 @@ of :math:`H\beta` emission line. Here, we define
 where :math:`\text{Fe}~\text{II}4570` is the flux of FeII emission lines between :math:`4334\mathring{A}` and :math:`4684\mathring{A}`. In observation, the :math:`R4570` is 
 between :math:`0.1` and :math:`1.0`. The default value is :math:`0.4`, which is the typical value for AGNs.
 
-Spectrum of Single Stellar
-~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The spectrum of single stellar is modeled by the stellar template of `XSL <http://xsl.u-strasbg.fr/>`_ 
-(`Verro et al. 2022 <https://ui.adsabs.harvard.edu/abs/2022A%26A...660A..34V/abstract>`_), which is 
-a stellar library with moderate-to-high spectral resolution observed by the VLT X-shooter. The key parameters are effective tempreture, metallicity and surface gravity, 
-which is enthough to select one spectrum from stellar library. Similar to spectrum of continuum of stellar disk, the flux of single stellar spectrum is calibrated 
-by the input magnitude (e.g. in SDSS r-band). 
 
 Model Maps of Physical Parameters of Galaxies
 ---------------------------------------------

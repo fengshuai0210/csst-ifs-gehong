@@ -1,2 +1,2 @@
-Ionized Gas
-===========
+Spectrum of Ionized Gas
+=======================
