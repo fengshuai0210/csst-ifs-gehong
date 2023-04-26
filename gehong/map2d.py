@@ -90,6 +90,29 @@ class Map2d(object):
         self.row = xvals
         # flip Y axis because we use Y increasing from bottom to top
         self.col = yvals[::-1]
+
+    def shift_rotate(self, yoff, xoff, rot):
+        """
+        Return shifted/rotated (y, x) given offsets (yoff, xoff) and rotation, rot (degrees)
+
+        Parameters
+        ----------
+        yoff, xoff: float
+            yoff, xoff offsets in world coordinates
+        rot: float
+            rotation angle in degrees
+
+        Returns
+        -------
+        ysh_rot, xsh_rot: 2D numpy arrays
+            rotated and shifted copies of Grid.x and Grid.y
+        """
+        pa_radians = np.pi * rot / 180.0
+        xsh = self.x - xoff
+        ysh = self.y - yoff
+        xsh_rot = xsh * np.cos(pa_radians) + ysh * np.sin(pa_radians)
+        ysh_rot = -xsh * np.sin(pa_radians) + ysh * np.cos(pa_radians)
+        return ysh_rot, xsh_rot
     
     def sersic_map(self, mag = 12, r_eff = 2, n = 2.5, ellip = 0.5, theta = -50):
         self.mag   = mag
@@ -140,7 +163,7 @@ class StellarPopulationMap():
         self.vdisp   = vdisp.map
         self.ebv     = ebv.map
         
-        self.mag = self.sbright + 2.5 * np.log10(self.dpix * self.dpix)
+        self.mag = self.sbright - 2.5 * np.log10(self.dpix * self.dpix)
         self.age = 10 ** self.logage / 1e9
         
         self.vdisp[self.vdisp < 10] = 10

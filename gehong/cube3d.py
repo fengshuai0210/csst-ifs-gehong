@@ -6,7 +6,7 @@ import astropy.wcs
 
 class Cube3D():
     """
-    3D data cube
+    Class of 3-dimentional spectral cube
     """
     def __init__(self, inst, stellar_map = None, gas_map = None):
         
@@ -34,13 +34,13 @@ class Cube3D():
             for j in range(self.ny):
                 if self.stellar_map is not None:
                     ss = StellarContinuum(stellar_tem, self.inst, mag = self.stellar_map.mag[i,j], 
-                                          age = self.stellar_map.age[i,j], feh = self.stellar_map.feh[i,j], 
+                                          Age = self.stellar_map.age[i,j], FeH = self.stellar_map.feh[i,j], 
                                           vel = self.stellar_map.vel[i,j], vdisp = self.stellar_map.vdisp[i,j], 
-                                          ebv = self.stellar_map.ebv[i,j])
+                                          Ebv = self.stellar_map.ebv[i,j])
                 if self.gas_map is not None:
-                    gg = HII_Region(self.inst, hii_tem, halpha = self.gas_map.halpha[i,j], 
-                                    zh = self.gas_map.zh[i,j], vel = self.gas_map.vel[i,j], 
-                                    vdisp = self.gas_map.vdisp[i,j], ebv = self.gas_map.ebv[i,j])
+                    gg = HII_Region(self.inst, hii_tem, Halpha = self.gas_map.halpha[i,j], 
+                                      logZ = self.gas_map.zh[i,j], vel = self.gas_map.vel[i,j], 
+                                      vdisp = self.gas_map.vdisp[i,j], Ebv = self.gas_map.ebv[i,j])
                     self.flux[i,j,:] = ss.flux + gg.flux
                 else:
                     self.flux[i,j,:] = ss.flux
@@ -51,7 +51,7 @@ class Cube3D():
                     'CUNIT1': 'Angstrom', 
                     'CDELT1': self.inst.dlam, 
                     'CRPIX1': 1, 
-                    'CRVAL1': 10, 
+                    'CRVAL1': np.min(self.wave), 
                     'CTYPE2': 'RA---TAN', 
                     'CUNIT2': 'deg', 
                     'CDELT2': self.dpix / 3600., 
@@ -65,6 +65,11 @@ class Cube3D():
                     'BUNIT' : '10**(-17)*erg/s/cm**2/Angstrom'}
         input_wcs = astropy.wcs.WCS(wcs_dict)
         self.wcs_header = input_wcs.to_header()
+        
+    def insert_spec(self, spec, dx = 0, dy = 0):
+        x0 = np.int(np.round(self.inst.nx / 2.))
+        y0 = np.int(np.round(self.inst.ny / 2.))
+        self.flux[x0 + dx, y0 + dy, :] = self.flux[x0 + dx, y0 + dy, :] + spec.flux
         
     def savefits(self, filename, path = './'): 
         

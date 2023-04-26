@@ -130,7 +130,6 @@ def log_rebin(lamRange, spec, oversample=False, velscale=None, flux=False):
 
     return specNew, logLam, velscale
 
-def gaussian_filter1d(spec, sig):
     """
     Convolve a spectrum by a Gaussian with different sigma for every pixel.
     If all sigma are the same this routine produces the same output as
@@ -143,6 +142,23 @@ def gaussian_filter1d(spec, sig):
     :param sig: vector of sigma values (in pixels) for every pixel
     :return: spec convolved with a Gaussian with dispersion sig
 
+    """
+
+def gaussian_filter1d(spec, sig):
+    """
+    gaussian_filter1d _summary_
+
+    Parameters
+    ----------
+    spec : float array
+        vector with the spectrum to convolve
+    sig : float
+        vector of sigma values (in pixels) for every pixel
+
+    Returns
+    -------
+    _type_
+        _description_
     """
     sig = sig.clip(0.01)  # forces zero sigmas to have 0.01 pixels
     p = int(np.ceil(np.max(3*sig)))
@@ -336,7 +352,7 @@ class EmissionLineTemplate():
             
             # Make parameter grid
             grid = line_table[2].data
-            self.zh_grid   = grid['logZ']
+            self.logz_grid   = grid['logZ']
         
         # Narrow line region model of 
         if model == 'nlr':
@@ -356,7 +372,7 @@ class EmissionLineTemplate():
             
             # Make parameter grid
             grid = line_table[2].data
-            self.zh_grid   = grid['logZ']
+            self.logz_grid   = grid['logZ']
         
         # Flux ratio
         flux_ratio = line_table[3].data
@@ -401,11 +417,11 @@ class HII_Region():
         _description_
     """
     
-    def __init__(self, inst, temp, halpha = 100, zh = 0,
-                 vel = 100, vdisp = 120, ebv = 0.1):     
+    def __init__(self, inst, temp, Halpha = 100, logZ = 0,
+                 vel = 100, vdisp = 120, Ebv = 0.1):     
         
-        if (zh > -2) & (zh < 0.5):
-            indz = np.argmin(np.abs(zh - temp.zh_grid))
+        if (logZ > -2) & (logZ < 0.5):
+            indz = np.argmin(np.abs(logZ - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
         else:
             raise ValueError('The range of logZ is not correct!')
@@ -413,11 +429,11 @@ class HII_Region():
         # Make emission line spectra through adding emission lines                 
         emlines = temp.emission_lines * flux_ratio
         flux_combine = np.sum(emlines, axis = 1)
-        flux_calibrate = flux_combine * halpha      # Units: erg/s/A/cm^2
+        flux_calibrate = flux_combine * Halpha      # Units: erg/s/A/cm^2
         
         # Dust attenuation
-        if np.isscalar(ebv):
-            flux_dust = reddening(temp.wave, flux_calibrate, ebv = ebv)
+        if np.isscalar(Ebv):
+            flux_dust = reddening(temp.wave, flux_calibrate, ebv = Ebv)
             
         # Broadening caused by Velocity Dispersion
         velscale = 10
@@ -475,11 +491,11 @@ class AGN_NLR():
         _description_
     """
     
-    def __init__(self, temp, instrument, halpha = 100, zh = False,
-                 vel = 100, vdisp = 120, ebv = 0.1):
+    def __init__(self, temp, instrument, Halpha = 100, logZ = False,
+                 vel = 100, vdisp = 120, Ebv = 0.1):
         
-        if (zh > -2) & (zh < 0.5):
-            indz = np.argmin(np.abs(zh - temp.zh_grid))
+        if (logZ > -2) & (logZ < 0.5):
+            indz = np.argmin(np.abs(logZ - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
         else:
             raise ValueError('The value of logZ is not correct!')
@@ -487,11 +503,11 @@ class AGN_NLR():
         # Make emission line spectra through adding emission lines                 
         emlines = temp.emission_lines * flux_ratio
         flux_combine = np.sum(emlines, axis = 1)
-        flux_calibrate = flux_combine * halpha      # Units: 1e-17 erg/s/A/cm^2
+        flux_calibrate = flux_combine * Halpha      # Units: 1e-17 erg/s/A/cm^2
         
         # Dust attenuation
-        if np.isscalar(ebv):
-            flux_dust = reddening(temp.wave, flux_calibrate, ebv = ebv)
+        if np.isscalar(Ebv):
+            flux_dust = reddening(temp.wave, flux_calibrate, ebv = Ebv)
             
         # Broadening caused by Velocity Dispersion
         velscale = 10
@@ -523,7 +539,7 @@ class AGN_BLR():
     Class for the broad line region of AGN
     """
     
-    def __init__(self, instrument, hbeta_flux = 100, hbeta_fwhm = 2000, ebv = None, vel = 0.,
+    def __init__(self, instrument, Hbeta_Flux = 100, Hbeta_FWHM = 2000, Ebv = None, vel = 0.,
                  lam_range = [500, 15000]):
         
         wave_rest = np.arange(lam_range[0], lam_range[1], 0.1)
@@ -536,21 +552,21 @@ class AGN_BLR():
         for i in range(len(line_names)):
             if i==0:
                 emission_line  = SingleEmissinoLine(wave_rest, line_waves[i], 
-                                                    hbeta_fwhm / 3e5 * line_waves[i])
+                                                    Hbeta_FWHM / 3e5 * line_waves[i])
                 emission_lines = emission_line
             else:
                 emission_line  = SingleEmissinoLine(wave_rest, line_waves[i], 
-                                                    hbeta_fwhm / 3e5 * line_waves[i])
+                                                    Hbeta_FWHM / 3e5 * line_waves[i])
                 emission_lines = np.vstack((emission_lines, emission_line))
         emlines = emission_lines.T * line_ratio
         flux_combine = np.sum(emlines, axis = 1)
         
         # Flux callibration
-        flux_calibrate = flux_combine * hbeta_flux      # Units: 1e-17 erg/s/A/cm^2
+        flux_calibrate = flux_combine * Hbeta_Flux      # Units: 1e-17 erg/s/A/cm^2
         
         # Dust attenuation
-        if np.isscalar(ebv):
-            flux_dust = reddening(wave_rest, flux_calibrate, ebv = ebv)
+        if np.isscalar(Ebv):
+            flux_dust = reddening(wave_rest, flux_calibrate, ebv = Ebv)
         else:
             flux_dust = flux_calibrate
             
@@ -568,7 +584,7 @@ class AGN_FeII():
     Class for FeII emission lines of AGN
     """
     
-    def __init__(self, instrument, hbeta_broad = 100, r4570 = 0.4, ebv = None, vel = 0.):
+    def __init__(self, instrument, Hbeta_Broad = 100, R4570 = 0.4, Ebv = None, vel = 0.):
         
         """
          _summary_
@@ -583,15 +599,15 @@ class AGN_FeII():
         
         # Determine the flux of FeII
         Fe4570_temp  = 100
-        Fe4570_model = hbeta_broad * r4570
+        Fe4570_model = Hbeta_Broad * R4570
         Ratio_Fe4570 = Fe4570_model / Fe4570_temp
         
         # Flux calibration
         flux_calibrate = flux_model * Ratio_Fe4570
         
         # Dust attenuation
-        if np.isscalar(ebv):
-            flux_dust = reddening(wave_rest, flux_calibrate, ebv = ebv)
+        if np.isscalar(Ebv):
+            flux_dust = reddening(wave_rest, flux_calibrate, ebv = Ebv)
         else:
             flux_dust = flux_calibrate
              
@@ -608,7 +624,7 @@ class AGN_Powerlaw():
     AGN_Powerlaw _summary_
     """
     
-    def __init__(self, instrument, m5100 = 1000, alpha = -1.5, ebv = None, vel = 0.,):
+    def __init__(self, instrument, M5100 = 1000, alpha = -1.5, Ebv = None, vel = 0.,):
 
         """
          _summary_
@@ -618,11 +634,11 @@ class AGN_Powerlaw():
         flux      = wave_rest ** alpha
         
         # Flux calibration
-        flux_calibrate = calibrate(wave_rest, flux, m5100, filtername='5100')
+        flux_calibrate = calibrate(wave_rest, flux, M5100, filtername='5100')
         
         # Dust attenuation
-        if np.isscalar(ebv):
-            flux_dust = reddening(wave_rest, flux_calibrate, ebv = ebv)
+        if np.isscalar(Ebv):
+            flux_dust = reddening(wave_rest, flux_calibrate, ebv = Ebv)
         else:
             flux_dust = flux_calibrate
             
@@ -635,29 +651,51 @@ class AGN_Powerlaw():
         self.flux = flux_red
         
 class AGN():
+
+    """
+    Class of singal spectra for AGN
+
+    Parameters
+    ----------
+    instrument : class
+        Instrument class
+    NLR_template : float, optional
+        Eddtington ratio, by default 0.05
+    Dist : int, optional
+        Distance to the black hole, by default 21
+
+    Returns
+    -------
+    float
+        Luminosity at 5100A
+    """
     
-    def __init__(self, instrument, nlr_template, bhmass = 1e6, edd_ratio = 0.05, 
-                 halpha_broad = 100, halpha_narrow = 100, vdisp_broad = 2000, vdisp_narrow = 500, 
-                 vel = 1000, zh = 0, ebv = 0.1, dist = 20):
+    def __init__(self, instrument, NLR_template, BHmass = 1e6, Edd_Ratio = 0.05, 
+                 Halpha_broad = 100, Halpha_narrow = 100, vdisp_broad = 2000, vdisp_narrow = 500, 
+                 vel = 1000, FeH = 0, EBV = 0.1, Dist = 20):
+
+        """
+         _summary_
+        """
         
-        NLR = AGN_NLR(nlr_template, instrument, halpha = halpha_narrow, zh = zh,
-                      vel = vel, vdisp = vdisp_narrow, ebv = ebv)
-        if halpha_broad > 0:
-            BLR = AGN_BLR(instrument, hbeta_flux = halpha_broad / 2.579, 
-                          hbeta_fwhm = vdisp_broad / 2.355, ebv = ebv, vel = vel)
+        NLR = AGN_NLR(NLR_template, instrument, Halpha = Halpha_narrow, logZ = FeH,
+                      vel = vel, vdisp = vdisp_narrow, Ebv = EBV)
+        if Halpha_broad > 0:
+            BLR = AGN_BLR(instrument, Hbeta_Flux = Halpha_broad / 2.579, 
+                          Hbeta_FWHM = vdisp_broad / 2.355, Ebv = EBV, vel = vel)
             
-        m5100 = BHmass_to_M5100(bhmass, edd_ratio = edd_ratio, dist = dist)
-        PL  = AGN_Powerlaw(instrument, m5100 = m5100, ebv = ebv, vel = vel)
-        Fe  = AGN_FeII(instrument, hbeta_broad = halpha_broad / 2.579, ebv = ebv, vel = vel)
+        m5100 = BHmass_to_M5100(BHmass, Edd_ratio = Edd_Ratio, Dist = Dist)
+        PL  = AGN_Powerlaw(instrument, M5100 = m5100, Ebv = EBV, vel = vel)
+        Fe  = AGN_FeII(instrument, Hbeta_Broad = Halpha_broad / 2.579, Ebv = EBV, vel = vel)
         
         self.wave = instrument.wave
         self.flux = NLR.flux + PL.flux + Fe.flux
         
-        if halpha_broad > 0:
+        if Halpha_broad > 0:
             self.flux = self.flux + BLR.flux
     
         
-def BHmass_to_M5100(bhmass, edd_ratio = 0.05, dist = 21):
+def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21):
     """
     Caculate luminosity at 5100A according to the black hole mass
 
@@ -677,13 +715,13 @@ def BHmass_to_M5100(bhmass, edd_ratio = 0.05, dist = 21):
     """
     
     # Calculate bolometric luminosity
-    Ledd = 3e4 * bhmass
-    Lbol = Ledd * edd_ratio
+    Ledd = 3e4 * BHmass
+    Lbol = Ledd * Edd_ratio
 
     # Convert bolometric luminosity to 5100A luminosity (Marconi et al. 2004)
     L5100 = Lbol / 10.9
     M5100 = 4.86 - 2.5 * np.log10(L5100)
-    m5100 = M5100 + 5. * np.log10(dist * 1e5)
+    m5100 = M5100 + 5. * np.log10(Dist * 1e5)
 
     return m5100
 
@@ -807,9 +845,9 @@ class StellarContinuumTemplate(object):
         if np.isscalar(FWHM_inst):
             FWHM_eff[Emile_FWHM < FWHM_inst] = FWHM_inst
             LSF[Emile_FWHM < FWHM_inst] = FWHM_inst
-        #else:
-        #    FWHM_eff[Emile_FWHM < FWHM_inst] = FWHM_inst[Emile_FWHM < FWHM_inst]
-        #    LSF[Emile_FWHM < FWHM_inst] = FWHM_inst[Emile_FWHM < FWHM_inst]
+        else:
+            FWHM_eff[Emile_FWHM < FWHM_inst] = FWHM_inst[Emile_FWHM < FWHM_inst]
+            LSF[Emile_FWHM < FWHM_inst] = FWHM_inst[Emile_FWHM < FWHM_inst]
         FWHM_dif  = np.sqrt(FWHM_eff**2 - Emile_FWHM**2)
         sigma_dif = FWHM_dif/2.355/h2['CDELT1']   # Sigma difference in pixels
 
@@ -820,13 +858,13 @@ class StellarContinuumTemplate(object):
                 p = all.index((age, metal))
                 hdu = fits.open(files[p])
                 ssp = hdu[0].data
-                #if np.isscalar(FWHM_dif):
-                #    ssp = ndimage.gaussian_filter1d(ssp, sigma_dif)
-                #else:
-                ssp = gaussian_filter1d(ssp, sigma_dif)  # convolution with variable sigma
+                if np.isscalar(FWHM_dif):
+                    ssp = ndimage.gaussian_filter1d(ssp, sigma_dif)
+                else:
+                    ssp = gaussian_filter1d(ssp, sigma_dif)  # convolution with variable sigma
                 sspNew  = log_rebin(lam_range_temp, ssp, velscale=velscale)[0]
-                #if normalize:
-                #    sspNew /= np.mean(sspNew)
+                if normalize:
+                    sspNew /= np.mean(sspNew)
                 templates[:, j, k] = sspNew
                 age_grid[j, k]   = age
                 metal_grid[j, k] = metal
@@ -837,7 +875,7 @@ class StellarContinuumTemplate(object):
         self.metal_grid = metal_grid
         self.n_ages = n_ages
         self.n_metal = n_metal
-        self.lsf = log_rebin(lam_range_temp, LSF, velscale=velscale)[0]
+        self.LSF = log_rebin(lam_range_temp, LSF, velscale=velscale)[0]
         self.velscale = velscale
         
     def fmass_ssp(self): 
@@ -859,8 +897,12 @@ class StellarContinuumTemplate(object):
         return fMs
     
 class StellarContinuum():
+
+    """
+     _summary_
+    """
     
-    def __init__(self, template, instrument, mag = 15, age = 1, feh = 0, vel = 100, vdisp = 100, ebv = 0):
+    def __init__(self, template, instrument, mag = 15, Age = 1, FeH = 0, vel = 100, vdisp = 100, Ebv = 0):
 
         """
         Modelling the spectra of stellar population
@@ -889,20 +931,20 @@ class StellarContinuum():
 
         # Select metal bins
         metals = template.metal_grid[0,:]
-        minloc = np.argmin(abs(feh - metals))
+        minloc = np.argmin(abs(FeH - metals))
         tpls = SSP_temp[:, :, minloc]
         fmass = template.fmass_ssp()[:, minloc]
         
         # Select age bins
         Ages = template.age_grid[:,0]
-        minloc = np.argmin(abs(age-Ages))
+        minloc = np.argmin(abs(Age-Ages))
         Stellar = tpls[:, minloc]
         
         wave = np.exp(template.log_lam_temp)
         
         # Broadening caused by Velocity Dispersion
         sigma_gal = vdisp / template.velscale                   # in pixel
-        sigma_LSF = template.lsf / template.velscale                 # in pixel
+        sigma_LSF = template.LSF / template.velscale                 # in pixel
         
         if sigma_gal>0: 
             sigma_dif = np.zeros(len(Stellar))
@@ -913,8 +955,8 @@ class StellarContinuum():
             flux0 = gaussian_filter1d(Stellar, sigma_dif)
         
         # Dust Reddening
-        if np.isscalar(ebv):
-            flux0 = reddening(wave, flux0, ebv = ebv)
+        if np.isscalar(Ebv):
+            flux0 = reddening(wave, flux0, ebv = Ebv)
             
         # Redshift
         redshift = vel / 3e5
@@ -936,10 +978,9 @@ class StellarContinuum():
 
 class SingleStarTemplate():
         
-    def __init__(self, inst, velscale = 20):
+    def __init__(self, velscale = 20, FWHM_inst = 2.5):
         
         filename = data_path + '/data/Starlib.XSL.fits'
-        fwhm_inst = inst.inst_fwhm
         
         hdulist = fits.open(filename)
         lam  = hdulist[1].data['Wave']
@@ -960,22 +1001,22 @@ class SingleStarTemplate():
         LSF = Temp_FWHM
         
         FWHM_eff = Temp_FWHM.copy()   # combined FWHM from stellar library and instrument(input)
-        if np.isscalar(fwhm_inst):
-            FWHM_eff[Temp_FWHM < fwhm_inst] = fwhm_inst
-            LSF[Temp_FWHM < fwhm_inst]      = fwhm_inst
-        #else:
-        #    FWHM_eff[Temp_FWHM < FWHM_inst] = FWHM_inst[Temp_FWHM < FWHM_inst]
-        #    LSF[Temp_FWHM < FWHM_inst]      = FWHM_inst[Temp_FWHM < FWHM_inst]
+        if np.isscalar(FWHM_inst):
+            FWHM_eff[Temp_FWHM < FWHM_inst] = FWHM_inst
+            LSF[Temp_FWHM < FWHM_inst]      = FWHM_inst
+        else:
+            FWHM_eff[Temp_FWHM < FWHM_inst] = FWHM_inst[Temp_FWHM < FWHM_inst]
+            LSF[Temp_FWHM < FWHM_inst]      = FWHM_inst[Temp_FWHM < FWHM_inst]
         FWHM_dif  = np.sqrt(FWHM_eff ** 2 - Temp_FWHM ** 2)
         sigma_dif = FWHM_dif / 2.355 / (lam[1] - lam[0])  # Sigma difference in pixels
 
         temp = np.empty((TemNew.size, par.size))
         for i in range(par.size):
             temp0 = log_rebin(lam_range_temp, flux[i, :], velscale=velscale)[0]
-            #if np.isscalar(FWHM_dif):
-            #    temp1 = ndimage.gaussian_filter1d(temp0, sigma_dif)
-            #else:
-            temp1 = gaussian_filter1d(temp0, sigma_dif)             # convolution with variable sigma
+            if np.isscalar(FWHM_dif):
+                temp1 = ndimage.gaussian_filter1d(temp0, sigma_dif)
+            else:
+                temp1 = gaussian_filter1d(temp0, sigma_dif)             # convolution with variable sigma
             tempNew = temp1 / np.mean(temp1)
             temp[:, i] = tempNew
             
@@ -985,29 +1026,37 @@ class SingleStarTemplate():
         self.teff_grid = par['Teff']
         self.feh_grid  = par['FeH']
         self.logg_grid = par['logg']
-        self.lsf       = Temp_FWHM
+        self.LSF       = Temp_FWHM
         self.velscale  = velscale
         
 class SingleStar():
+
+    """
+     _summary_
+    """
     
-    def __init__(self, template, instrument, mag = 15, teff = 10000, feh = 0, vel = 100, ebv = 0):
+    def __init__(self, template, instrument, mag = 15, Teff = 10000, FeH = 0, vel = 100, Ebv = 0):
+
+        """
+         _summary_
+        """
  
         StarTemp = template.templates
         
         # Select metal bins
-        idx_feh = (np.abs(template.feh_grid - feh) < 0.5)
-        tpls = StarTemp[:, idx_feh]
+        idx_FeH = (np.abs(template.feh_grid - FeH) < 0.5)
+        tpls = StarTemp[:, idx_FeH]
         
         # Select Teff bins
-        teff_feH = template.teff_grid[idx_feh]
-        minloc   = np.argmin(abs(teff - teff_feH))
+        Teff_FeH = template.teff_grid[idx_FeH]
+        minloc   = np.argmin(abs(Teff - Teff_FeH))
         starspec = tpls[:, minloc]
         
         wave = np.exp(template.log_lam_temp)
         
         # Dust Reddening
-        if np.isscalar(ebv):
-            starspec = reddening(wave, starspec, ebv = ebv)
+        if np.isscalar(Ebv):
+            starspec = reddening(wave, starspec, ebv = Ebv)
             
         # Redshift
         redshift = vel / 3e5

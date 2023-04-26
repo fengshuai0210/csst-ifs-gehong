@@ -1,6 +1,6 @@
 import numpy as np
 
-class instrument():
+class instrument:
     
     def __init__(self, wave_min = 3500, wave_max = 10000, 
                  dlam = 1, inst_fwhm = 2.5,
