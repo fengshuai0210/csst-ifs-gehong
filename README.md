@@ -1,5 +1,3 @@
-# Example Package
+# csst-ifs-gehong Package
 
-This is a simple example package. You can use
-[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
-to write your content.
+This is a Python package for modelling the data of intergral field spectrascopy mounted on the Chinese Space Station Telescopy (CSST-IFS). See more detail at [csst-ifs-gehong](https://csst-ifs-gehong.readthedocs.io/).
