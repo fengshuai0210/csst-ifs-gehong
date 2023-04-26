@@ -7,7 +7,37 @@ from skimage.transform import resize
 
 def Sersic2D(x, y, mag = 12, r_eff = 1, n = 2, ellip = 0.5, 
              theta = 0, x_0 = 0, y_0 = 0, pixelscale = 0.01):
-    
+    """
+    Sersic2D _summary_
+
+    Parameters
+    ----------
+    x : _type_
+        _description_
+    y : _type_
+        _description_
+    mag : int, optional
+        _description_, by default 12
+    r_eff : int, optional
+        _description_, by default 1
+    n : int, optional
+        _description_, by default 2
+    ellip : float, optional
+        _description_, by default 0.5
+    theta : int, optional
+        _description_, by default 0
+    x_0 : int, optional
+        _description_, by default 0
+    y_0 : int, optional
+        _description_, by default 0
+    pixelscale : float, optional
+        size of pixel in arcsec, by default 0.01
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
     # Produce Sersic profile
     bn = sp.gammaincinv(2. * n, 0.5)
     a, b = r_eff, (1 - ellip) * r_eff
@@ -29,7 +59,33 @@ def Sersic2D(x, y, mag = 12, r_eff = 1, n = 2, ellip = 0.5,
 
 def VelMap2D(x, y, vmax = 200, rt = 1, ellip = 0.5, 
              theta = 0, x_0 = 0, y_0 = 0):
-    
+    """
+    VelMap2D _summary_
+
+    Parameters
+    ----------
+    x : _type_
+        _description_
+    y : _type_
+        _description_
+    vmax : int, optional
+        _description_, by default 200
+    rt : int, optional
+        _description_, by default 1
+    ellip : float, optional
+        _description_, by default 0.5
+    theta : int, optional
+        _description_, by default 0
+    x_0 : int, optional
+        _description_, by default 0
+    y_0 : int, optional
+        _description_, by default 0
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
     # Produce tanh profile
     a, b = rt, (1 - ellip) * rt
     cos_theta, sin_theta = np.cos(theta), np.sin(theta)
@@ -42,7 +98,35 @@ def VelMap2D(x, y, vmax = 200, rt = 1, ellip = 0.5,
 
 def GradMap2D(x, y, a0 = 10, r_eff = 1, gred = -1, ellip = 0.5, 
               theta = 0, x_0 = 0, y_0 = 0):
-    
+    """
+    GradMap2D _summary_
+
+    Parameters
+    ----------
+    x : _type_
+        _description_
+    y : _type_
+        _description_
+    a0 : int, optional
+        _description_, by default 10
+    r_eff : int, optional
+        _description_, by default 1
+    gred : int, optional
+        _description_, by default -1
+    ellip : float, optional
+        _description_, by default 0.5
+    theta : int, optional
+        _description_, by default 0
+    x_0 : int, optional
+        _description_, by default 0
+    y_0 : int, optional
+        _description_, by default 0
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
     # Produce gradiant profile
     a, b = r_eff, (1 - ellip) * r_eff
     cos_theta, sin_theta = np.cos(theta), np.sin(theta)
@@ -54,21 +138,14 @@ def GradMap2D(x, y, a0 = 10, r_eff = 1, gred = -1, ellip = 0.5,
     return profile
 
 class Map2d(object):
-
     """
-    Generate an x, y grid in a rectangular region, sampled with xsamp and
-    ysamp spacings in the x and y directions, respectively.  Origin is at the
-    upper-left corner to match numpy and matplotlib convention. astropy.io.fits
-    also assumes UL origin by default.
+    __init__ _summary_
 
     Parameters
     ----------
-    xsamp, ysamp : float, float
-        The sampling spacing in the x and y directions.
-    nx, ny: int, int
-        Number of samples in the x and y directions.
+    inst : _type_
+        _description_
     """
-
     def __init__(self, inst):
         self.xsamp = inst.dpix
         self.ysamp = inst.dpix
