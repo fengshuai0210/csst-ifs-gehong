@@ -359,30 +359,30 @@ class HII_Region():
 
     Parameters
     ----------
-    wave : _type_
-        _description_
-    temp : _type_
-        _description_
-    Halpha : int, optional
-        _description_, by default 100
-    logZ : bool, optional
-        _description_, by default False
-    vel : int, optional
-        _description_, by default 100
-    vdisp : int, optional
-        _description_, by default 120
+    config : class
+        Class of configuration
+    temp : class
+        Class of emission line template
+    Halpha : float, optional
+        Integral flux of Halpha emission line, by default 100 * 1e-17 erg/s/cm^2
+    logZ : float, optional
+        Gas-phase metallicity, by default 0.0
+    vel : float, optional
+        Line of sight velocity, by default 100.0km/s
+    vdisp : float, optional
+        Velocity dispersion, by default 120.0km/s
     Ebv : float, optional
-        _description_, by default 0.1
+        Dust extinction, by default 0.1
 
     Raises
     ------
     ValueError
-        _description_
+        The value of logZ should be between -2 and 0.5.
     """
     
-    def __init__(self, inst, temp, Halpha = 100, logZ = 0,
-                 vel = 100, vdisp = 120, Ebv = 0.1):     
-        
+    def __init__(self, config, temp, Halpha = 100.0, logZ = 0.0,
+                 vel = 100.0, vdisp = 120.0, Ebv = 0.1):
+
         if (logZ > -2) & (logZ < 0.5):
             indz = np.argmin(np.abs(logZ - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
@@ -417,9 +417,9 @@ class HII_Region():
         # Redshift
         redshift = vel / 3e5
         wave_r = np.exp(logLam) * (1 + redshift)
-        flux_red = np.interp(inst.wave, wave_r, flux_broad)
+        flux_red = np.interp(config.wave, wave_r, flux_broad)
             
-        self.wave = inst.wave
+        self.wave = config.wave
         self.flux = flux_red
 
 #############
@@ -433,29 +433,29 @@ class AGN_NLR():
 
     Parameters
     ----------
-    wave : float
-        Wavelength
+    config : class
+        Class of configuration
     temp : class
         Class of emission line template
     Halpha : float, optional
-        Total flux of Halpha emission line, units 1e-17 erg/s, by default 100
+        Integral flux of Halpha emission line, by default 100 * 1e-17 erg/s/cm^2
     logZ : float, optional
-        Gas-phase metallicity, by default False
+        Gas-phase metallicity, by default 0.0
     vel : float, optional
-        Line-of-sight velocity, by default 100
+        Line of sight velocity, by default 100.0km/s
     vdisp : float, optional
-        Velocity dispersion, by default 120
+        Velocity dispersion, by default 120.0km/s
     Ebv : float, optional
         Dust extinction, by default 0.1
 
     Raises
     ------
     ValueError
-        _description_
+        The value of logZ should be between -2 and 0.5.
     """
     
-    def __init__(self, temp, instrument, Halpha = 100, logZ = False,
-                 vel = 100, vdisp = 120, Ebv = 0.1):
+    def __init__(self, config, temp, Halpha = 100.0, logZ = 0.0,
+                 vel = 100.0, vdisp = 120.0, Ebv = 0.1):
         
         if (logZ > -2) & (logZ < 0.5):
             indz = np.argmin(np.abs(logZ - temp.logz_grid))
@@ -491,20 +491,35 @@ class AGN_NLR():
         # Redshift
         redshift = vel / 3e5
         wave_r = np.exp(logLam) * (1 + redshift)
-        flux_red = np.interp(instrument.wave, wave_r, flux_broad)
+        flux_red = np.interp(config.wave, wave_r, flux_broad)
             
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = flux_red
 
 class AGN_BLR():
 
     """
     Class for the broad line region of AGN
+
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    Hbeta_Flux : float, optional
+        Integral flux of Hbeta broad line, by default 100 * 1e-17 erg/s/cm^2
+    Hbeta_FWHM : float, optional
+        FWHM of Hbeta broad line, by default 2000.0km/s
+    vel : float, optional
+        Line of sight velocity, by default 100.0km/s
+    Ebv : float, optional
+        Dust extinction, by default 0.1
+    lam_range : list, optional
+        Wavelength range, by default [500, 15000]
     """
-    
-    def __init__(self, instrument, Hbeta_Flux = 100, Hbeta_FWHM = 2000, Ebv = None, vel = 0.,
-                 lam_range = [500, 15000]):
-        
+
+    def __init__(self, config, Hbeta_Flux = 100.0, Hbeta_FWHM = 2000.0, Ebv = 0.1, 
+                 vel = 0.,lam_range = [500, 15000]):
+
         wave_rest = np.arange(lam_range[0], lam_range[1], 0.1)
         
         line_names = ['Hepsilon', 'Hdelta', 'Hgamma', 'Hbeta', 'Halpha']
@@ -542,16 +557,24 @@ class AGN_BLR():
         self.flux = flux_red
 
 class AGN_FeII():
-
     """
     Class for FeII emission lines of AGN
+
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    Hbeta_Broad : float, optional
+        Integral flux of Hbeta broad line, by default 100 * 1e-17 erg/s/cm^2
+    R4570 : float, optional
+        Flux ratio between Fe4570 flux and Hbeta broad line flux, by default 0.4
+    vel : float, optional
+        Line of sight velocity, by default 100.0km/s
+    Ebv : float, optional
+        Dust extinction, by default 0.1
     """
     
-    def __init__(self, instrument, Hbeta_Broad = 100, R4570 = 0.4, Ebv = None, vel = 0.):
-        
-        """
-         _summary_
-        """
+    def __init__(self, config, Hbeta_Broad = 100.0, R4570 = 0.4, Ebv = 0.1, vel = 100.0):
         filename = data_path + '/data/FeII.AGN.fits'
         
         # Loading FeII template
@@ -577,9 +600,9 @@ class AGN_FeII():
         # Redshift
         redshift = vel / 3e5
         wave_r   = wave_rest * (1 + redshift)
-        flux_red = np.interp(instrument.wave, wave_r, flux_dust)
+        flux_red = np.interp(config.wave, wave_r, flux_dust)
         
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = flux_red
         
 class AGN_Powerlaw():
@@ -587,11 +610,7 @@ class AGN_Powerlaw():
     AGN_Powerlaw _summary_
     """
     
-    def __init__(self, instrument, M5100 = 1000, alpha = -1.5, Ebv = None, vel = 0.,):
-
-        """
-         _summary_
-        """
+    def __init__(self, config, M5100 = 1000.0, alpha = -1.5, Ebv = None, vel = 100.0, Ebv = 0.1):
         
         wave_rest = np.linspace(1000,20000,10000)
         flux      = wave_rest ** alpha
@@ -608,9 +627,9 @@ class AGN_Powerlaw():
         # Redshift
         redshift = vel / 3e5
         wave_r   = wave_rest * (1 + redshift)
-        flux_red = np.interp(instrument.wave, wave_r, flux_dust)
+        flux_red = np.interp(config.wave, wave_r, flux_dust)
         
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = flux_red
         
 class AGN():
@@ -998,7 +1017,7 @@ class SingleStar():
      _summary_
     """
     
-    def __init__(self, template, instrument, mag = 15, Teff = 10000, FeH = 0, vel = 100, Ebv = 0):
+    def __init__(self, template, config, mag = 15, Teff = 10000, FeH = 0, vel = 100, Ebv = 0):
 
         """
          _summary_
@@ -1025,12 +1044,12 @@ class SingleStar():
         redshift = vel / 3e5
         wave_r = wave * (1 + redshift)
         
-        flux = np.interp(instrument.wave, wave_r, starspec)
+        flux = np.interp(config.wave, wave_r, starspec)
         
         # Calibration
         if np.isscalar(mag):
-            flux = calibrate(instrument.wave, flux, mag, filtername='SLOAN_SDSS.r')
+            flux = calibrate(config.wave, flux, mag, filtername='SLOAN_SDSS.r')
         
         # Convert to input wavelength
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = flux
