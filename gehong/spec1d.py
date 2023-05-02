@@ -12,29 +12,17 @@ data_path = os.path.dirname(__file__)
 
 def readcol(filename, **kwargs):
     """
-    Tries to reproduce the simplicity of the IDL procedure READCOL.
-    Given a file with some columns of strings and columns of numbers, this
-    function extract the columns from a file and places them in Numpy vectors
-    with the proper type:
+    readcol, taken from ppxf.
 
-    name, mass = readcol('prova.txt', usecols=(0, 2))
+    Parameters
+    ----------
+    filename : string
+        The name of input ascii file
 
-    where the file prova.txt contains the following:
-
-    ##################
-    # name radius mass
-    ##################
-      abc   25.   36.
-      cde   45.   56.
-      rdh   55    57.
-      qtr   75.   46.
-      hdt   47.   56.
-    ##################
-    
-    This function is a wrapper for numpy.genfromtxt() and accepts the same input.
-    See the following website for the full documentation 
-    https://docs.scipy.org/doc/numpy/reference/generated/numpy.genfromtxt.html
-
+    Returns
+    -------
+    float
+        The value of each columns
     """
     f = np.genfromtxt(filename, dtype=None, **kwargs)
 
@@ -56,40 +44,32 @@ def readcol(filename, **kwargs):
 
 def log_rebin(lamRange, spec, oversample=False, velscale=None, flux=False):
     """
-    Logarithmically rebin a spectrum, while rigorously conserving the flux.
-    Basically the photons in the spectrum are simply redistributed according
-    to a new grid of pixels, with non-uniform size in the spectral direction.
-    
-    When the flux keyword is set, this program performs an exact integration 
-    of the original spectrum, assumed to be a step function within the 
-    linearly-spaced pixels, onto the new logarithmically-spaced pixels. 
-    The output was tested to agree with the analytic solution.
+    Logarithmically rebin a spectrum, while rigorously conserving the flux. 
+    This function is taken from ppxf. 
 
-    :param lamRange: two elements vector containing the central wavelength
-        of the first and last pixels in the spectrum, which is assumed
-        to have constant wavelength scale! E.g. from the values in the
-        standard FITS keywords: LAMRANGE = CRVAL1 + [0,CDELT1*(NAXIS1-1)].
-        It must be LAMRANGE[0] < LAMRANGE[1].
-    :param spec: input spectrum.
-    :param oversample: Oversampling can be done, not to loose spectral resolution,
-        especally for extended wavelength ranges and to avoid aliasing.
-        Default: OVERSAMPLE=1 ==> Same number of output pixels as input.
-    :param velscale: velocity scale in km/s per pixels. If this variable is
-        not defined, then it will contain in output the velocity scale.
-        If this variable is defined by the user it will be used
-        to set the output number of pixels and wavelength scale.
-    :param flux: (boolean) True to preserve total flux. In this case the
-        log rebinning changes the pixels flux in proportion to their
-        dLam so the following command will show large differences
-        beween the spectral shape before and after LOG_REBIN:
+    Parameters
+    ----------
+    lamRange : array
+        Two elements vector containing the central wavelength
+        of the first and last pixels in the spectrum
+    spec : array
+        Input spectrum
+    oversample : bool, optional
+        Oversampling can be done, not to loose spectral resolution,
+        especally for extended wavelength ranges and to avoid aliasing, by default False
+    velscale : float, optional
+        velocity scale in km/s per pixels, by default None
+    flux : bool, optional
+        True to preserve total flux, by default False
 
-           plt.plot(exp(logLam), specNew)  # Plot log-rebinned spectrum
-           plt.plot(np.linspace(lamRange[0], lamRange[1], spec.size), spec)
-
-        By defaul, when this is False, the above two lines produce
-        two spectra that almost perfectly overlap each other.
-    :return: [specNew, logLam, velscale]
-
+    Returns
+    -------
+    specNew : array
+        Output spectrum
+    logLam : array
+        Wavelength array in logarithm
+    velscale : array
+        velocity scale in km/s per pixels
     """
     lamRange = np.asarray(lamRange)
     assert len(lamRange) == 2, 'lamRange must contain two elements'
@@ -130,23 +110,9 @@ def log_rebin(lamRange, spec, oversample=False, velscale=None, flux=False):
 
     return specNew, logLam, velscale
 
-    """
-    Convolve a spectrum by a Gaussian with different sigma for every pixel.
-    If all sigma are the same this routine produces the same output as
-    scipy.ndimage.gaussian_filter1d, except for the border treatment.
-    Here the first/last p pixels are filled with zeros.
-    When creating a template library for SDSS data, this implementation
-    is 60x faster than a naive for loop over pixels.
-
-    :param spec: vector with the spectrum to convolve
-    :param sig: vector of sigma values (in pixels) for every pixel
-    :return: spec convolved with a Gaussian with dispersion sig
-
-    """
-
 def gaussian_filter1d(spec, sig):
     """
-    gaussian_filter1d _summary_
+    One-dimensional Gaussian convolution
 
     Parameters
     ----------
@@ -154,11 +120,10 @@ def gaussian_filter1d(spec, sig):
         vector with the spectrum to convolve
     sig : float
         vector of sigma values (in pixels) for every pixel
-
     Returns
     -------
-    _type_
-        _description_
+    float array
+        Spectrum after convolution
     """
     sig = sig.clip(0.01)  # forces zero sigmas to have 0.01 pixels
     p = int(np.ceil(np.max(3*sig)))
@@ -179,20 +144,24 @@ def gaussian_filter1d(spec, sig):
 
 def calibrate(wave, flux, mag, filtername = 'SLOAN_SDSS.r'):
     """
-    Calibrate the spectra according to the magnitude.
+    Flux calibration of spectrum
 
-    :param wave: _description_
-    :type wave: _type_
-    :param flux: _description_
-    :type flux: _type_
-    :param mag: _description_
-    :type mag: _type_
-    :param filtername: _description_, defaults to './data/SLOAN_SDSS.r'
-    :type filtername: str, optional
-    :return: _description_
-    :rtype: _type_
+    Parameters
+    ----------
+    wave : float array
+        Wavelength of input spectrum
+    flux : float array
+        Flux of input spectrum
+    mag : float
+        Magnitude used for flux calibration
+    filtername : str, optional
+        Filter band name, by default 'SLOAN_SDSS.r'
+
+    Returns
+    -------
+    float array
+        Spectrum after flux calibration
     """
-        
     # Loading response curve
     if filtername == '5100':
         wave0 = np.linspace(3000,10000,7000)
@@ -227,13 +196,11 @@ def calibrate(wave, flux, mag, filtername = 'SLOAN_SDSS.r'):
 
 def Calzetti_Law(wave, Rv = 4.05):
     """
-    Calzetti_Law
-
     Dust Extinction Curve of Calzetti et al. (2000)
 
     Parameters
     ----------
-    wave : float
+    wave : float, or float array
         Wavelength
     Rv : float, optional
         Extinction coefficient, by default 4.05
@@ -260,9 +227,9 @@ def reddening(wave, flux, ebv = 0.0, law = 'calzetti', Rv = 4.05):
 
     Parameters
     ----------
-    wave : float
+    wave : float array
         Wavelength of input spectra
-    flux : float
+    flux : float array
         Flux of input spectra
     ebv : float, optional
         E(B-V) value, by default 0
@@ -273,7 +240,7 @@ def reddening(wave, flux, ebv = 0.0, law = 'calzetti', Rv = 4.05):
 
     Returns
     -------
-    float
+    float array
         Flux of spectra after reddening
     """
     curve = Calzetti_Law(wave, Rv = Rv)
@@ -290,8 +257,8 @@ def SingleEmissinoLine(wave, line_wave, FWHM_inst):
 
     Parameters
     ----------
-    wave : float
-        Wavelength of 
+    wave : float array
+        Wavelength of spectrum
     line_wave : float
         Wavelength of emission line at the line center
     FWHM_inst : float
@@ -299,7 +266,7 @@ def SingleEmissinoLine(wave, line_wave, FWHM_inst):
 
     Returns
     -------
-    float
+    float array
         Spectra of single emission line
     """
     sigma = FWHM_inst / 2.355 
@@ -307,31 +274,27 @@ def SingleEmissinoLine(wave, line_wave, FWHM_inst):
     return flux
 
 class EmissionLineTemplate():
-
     """
-     Template for the emission lines
+    Template for the emission lines
+
+    Parameters
+    ----------
+    config : class
+        The class of configuration.
+    lam_range : list, optional
+        Wavelength range, by default [500, 15000]
+    dlam : float, optional
+        Wavelength width per pixel, by default 0.1A
+    model : str, optional
+        Emission line model, including 'hii' for HII region and 'nlr' for narrow line region of AGN, 
+        by default 'hii'
     """
     
-    def __init__(self, instrument, lam_range = [500, 15000], dlam = 0.1, model = 'hii'):
-
-        """
-        __init__ _summary_
-
-        Parameters
-        ----------
-        lam_range : list, optional
-            _description_, by default [500, 15000]
-        dlam : float, optional
-            _description_, by default 0.1
-        model : str, optional
-            _description_, by default 'nlr'
-        FWHM_inst : float, optional
-            _description_, by default 0.5
-        """
+    def __init__(self, config, lam_range = [500, 15000], dlam = 0.1, model = 'hii'):
         
         self.lam_range = lam_range
         self.wave = np.arange(lam_range[0], lam_range[1], 0.1)
-        self.FWHM_inst = instrument.inst_fwhm
+        self.FWHM_inst = config.inst_fwhm
         self.model = model
         
         # HII region model of fsps-cloudy
