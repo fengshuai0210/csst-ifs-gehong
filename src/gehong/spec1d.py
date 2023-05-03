@@ -213,11 +213,11 @@ def Calzetti_Law(wave, Rv = 4.05):
     wave_number = 1./(wave * 1e-4)
     reddening_curve = np.zeros(len(wave))
     
-    idx = np.logical_and(wave >= 1200, wave <= 6300)
+    idx = (wave >= 1200) & (wave < 6300)
     reddening_curve[idx] = 2.659 * ( -2.156 + 1.509 * wave_number[idx] - 0.198 * \
                     (wave_number[idx] ** 2)) + 0.011 * (wave_number[idx] **3 ) + Rv
                                     
-    idx = np.logical_and(wave >= 6300, wave <= 22000)
+    idx = (wave >= 6300) & (wave <= 22000)
     reddening_curve[idx] = 2.659 * ( -1.857 + 1.040 * wave_number[idx]) + Rv
     return reddening_curve
 
@@ -615,7 +615,7 @@ class AGN_Powerlaw():
     config : class
         Class of configuration
     M5100 : float, optional
-        Median flux of power law spectrum between 5050A and 5150A, by default 1000.0 * 1e-17 erg/s/cm^2
+        Magnitude of power law spectrum between 5050A and 5150A, by default 1000.0 * 1e-17 erg/s/cm^2
     alpha : float, optional
         Index of power law, by default -1.5
     vel : float, optional
@@ -701,7 +701,7 @@ class AGN():
     
 def BHmass_to_M5100(bhmass, edd_ratio = 0.05, dist = 21.0):
     """
-    Caculate luminosity at 5100A according to the black hole mass
+    Caculate magnitude at 5100A according to the black hole mass
 
     Parameters
     ----------
@@ -715,7 +715,7 @@ def BHmass_to_M5100(bhmass, edd_ratio = 0.05, dist = 21.0):
     Returns
     -------
     float
-        Luminosity at 5100A
+        Magnitude at 5100A
     """
     
     # Calculate bolometric luminosity
