@@ -363,15 +363,15 @@ class HII_Region():
         Class of configuration
     temp : class
         Class of emission line template
-    Halpha : float, optional
+    halpha : float, optional
         Integral flux of Halpha emission line, by default 100 * 1e-17 erg/s/cm^2
-    logZ : float, optional
+    logz : float, optional
         Gas-phase metallicity, by default 0.0
     vel : float, optional
         Line of sight velocity, by default 100.0km/s
     vdisp : float, optional
         Velocity dispersion, by default 120.0km/s
-    Ebv : float, optional
+    ebv : float, optional
         Dust extinction, by default 0.1
 
     Raises
@@ -380,11 +380,11 @@ class HII_Region():
         The value of logZ should be between -2 and 0.5.
     """
     
-    def __init__(self, config, temp, Halpha = 100.0, logZ = 0.0,
-                 vel = 100.0, vdisp = 120.0, Ebv = 0.1):
+    def __init__(self, config, temp, halpha = 100.0, logz = 0.0,
+                 vel = 100.0, vdisp = 120.0, ebv = 0.1):
 
-        if (logZ > -2) & (logZ < 0.5):
-            indz = np.argmin(np.abs(logZ - temp.logz_grid))
+        if (logz > -2) & (logz < 0.5):
+            indz = np.argmin(np.abs(logz - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
         else:
             raise ValueError('The range of logZ is not correct!')
@@ -392,11 +392,11 @@ class HII_Region():
         # Make emission line spectra through adding emission lines                 
         emlines = temp.emission_lines * flux_ratio
         flux_combine = np.sum(emlines, axis = 1)
-        flux_calibrate = flux_combine * Halpha      # Units: erg/s/A/cm^2
+        flux_calibrate = flux_combine * halpha      # Units: erg/s/A/cm^2
         
         # Dust attenuation
-        if np.isscalar(Ebv):
-            flux_dust = reddening(temp.wave, flux_calibrate, ebv = Ebv)
+        if np.isscalar(ebv):
+            flux_dust = reddening(temp.wave, flux_calibrate, ebv = ebv)
             
         # Broadening caused by Velocity Dispersion
         velscale = 10
@@ -437,15 +437,15 @@ class AGN_NLR():
         Class of configuration
     temp : class
         Class of emission line template
-    Halpha : float, optional
+    halpha : float, optional
         Integral flux of Halpha emission line, by default 100 * 1e-17 erg/s/cm^2
-    logZ : float, optional
+    logz : float, optional
         Gas-phase metallicity, by default 0.0
     vel : float, optional
         Line of sight velocity, by default 100.0km/s
     vdisp : float, optional
         Velocity dispersion, by default 120.0km/s
-    Ebv : float, optional
+    ebv : float, optional
         Dust extinction, by default 0.1
 
     Raises
@@ -454,11 +454,11 @@ class AGN_NLR():
         The value of logZ should be between -2 and 0.5.
     """
     
-    def __init__(self, config, temp, Halpha = 100.0, logZ = 0.0,
-                 vel = 100.0, vdisp = 120.0, Ebv = 0.1):
+    def __init__(self, config, temp, halpha = 100.0, logz = 0.0,
+                 vel = 100.0, vdisp = 120.0, ebv = 0.1):
         
-        if (logZ > -2) & (logZ < 0.5):
-            indz = np.argmin(np.abs(logZ - temp.logz_grid))
+        if (logz > -2) & (logz < 0.5):
+            indz = np.argmin(np.abs(logz - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
         else:
             raise ValueError('The value of logZ is not correct!')
@@ -466,11 +466,11 @@ class AGN_NLR():
         # Make emission line spectra through adding emission lines                 
         emlines = temp.emission_lines * flux_ratio
         flux_combine = np.sum(emlines, axis = 1)
-        flux_calibrate = flux_combine * Halpha      # Units: 1e-17 erg/s/A/cm^2
+        flux_calibrate = flux_combine * halpha      # Units: 1e-17 erg/s/A/cm^2
         
         # Dust attenuation
-        if np.isscalar(Ebv):
-            flux_dust = reddening(temp.wave, flux_calibrate, ebv = Ebv)
+        if np.isscalar(ebv):
+            flux_dust = reddening(temp.wave, flux_calibrate, ebv = ebv)
             
         # Broadening caused by Velocity Dispersion
         velscale = 10
@@ -505,19 +505,19 @@ class AGN_BLR():
     ----------
     config : class
         Class of configuration
-    Hbeta_Flux : float, optional
+    hbeta_flux : float, optional
         Integral flux of Hbeta broad line, by default 100 * 1e-17 erg/s/cm^2
-    Hbeta_FWHM : float, optional
+    hbeta_fwhm : float, optional
         FWHM of Hbeta broad line, by default 2000.0km/s
     vel : float, optional
         Line of sight velocity, by default 100.0km/s
-    Ebv : float, optional
+    ebv : float, optional
         Dust extinction, by default 0.1
     lam_range : list, optional
         Wavelength range, by default [500, 15000]
     """
 
-    def __init__(self, config, Hbeta_Flux = 100.0, Hbeta_FWHM = 2000.0, Ebv = 0.1, 
+    def __init__(self, config, hbeta_flux = 100.0, hbeta_fwhm = 2000.0, ebv = 0.1, 
                  vel = 0.,lam_range = [500, 15000]):
 
         wave_rest = np.arange(lam_range[0], lam_range[1], 0.1)
@@ -530,21 +530,21 @@ class AGN_BLR():
         for i in range(len(line_names)):
             if i==0:
                 emission_line  = SingleEmissinoLine(wave_rest, line_waves[i], 
-                                                    Hbeta_FWHM / 3e5 * line_waves[i])
+                                                    hbeta_fwhm / 3e5 * line_waves[i])
                 emission_lines = emission_line
             else:
                 emission_line  = SingleEmissinoLine(wave_rest, line_waves[i], 
-                                                    Hbeta_FWHM / 3e5 * line_waves[i])
+                                                    hbeta_fwhm / 3e5 * line_waves[i])
                 emission_lines = np.vstack((emission_lines, emission_line))
         emlines = emission_lines.T * line_ratio
         flux_combine = np.sum(emlines, axis = 1)
         
         # Flux callibration
-        flux_calibrate = flux_combine * Hbeta_Flux      # Units: 1e-17 erg/s/A/cm^2
+        flux_calibrate = flux_combine * hbeta_flux      # Units: 1e-17 erg/s/A/cm^2
         
         # Dust attenuation
-        if np.isscalar(Ebv):
-            flux_dust = reddening(wave_rest, flux_calibrate, ebv = Ebv)
+        if np.isscalar(ebv):
+            flux_dust = reddening(wave_rest, flux_calibrate, ebv = ebv)
         else:
             flux_dust = flux_calibrate
             
@@ -564,17 +564,17 @@ class AGN_FeII():
     ----------
     config : class
         Class of configuration
-    Hbeta_Broad : float, optional
+    hbeta_broad : float, optional
         Integral flux of Hbeta broad line, by default 100 * 1e-17 erg/s/cm^2
-    R4570 : float, optional
+    r4570 : float, optional
         Flux ratio between Fe4570 flux and Hbeta broad line flux, by default 0.4
     vel : float, optional
         Line of sight velocity, by default 100.0km/s
-    Ebv : float, optional
+    ebv : float, optional
         Dust extinction, by default 0.1
     """
     
-    def __init__(self, config, Hbeta_Broad = 100.0, R4570 = 0.4, Ebv = 0.1, vel = 100.0):
+    def __init__(self, config, hbeta_broad = 100.0, r4570 = 0.4, ebv = 0.1, vel = 100.0):
         filename = data_path + '/data/FeII.AGN.fits'
         
         # Loading FeII template
@@ -585,15 +585,15 @@ class AGN_FeII():
         
         # Determine the flux of FeII
         Fe4570_temp  = 100
-        Fe4570_model = Hbeta_Broad * R4570
+        Fe4570_model = hbeta_broad * r4570
         Ratio_Fe4570 = Fe4570_model / Fe4570_temp
         
         # Flux calibration
         flux_calibrate = flux_model * Ratio_Fe4570
         
         # Dust attenuation
-        if np.isscalar(Ebv):
-            flux_dust = reddening(wave_rest, flux_calibrate, ebv = Ebv)
+        if np.isscalar(ebv):
+            flux_dust = reddening(wave_rest, flux_calibrate, ebv = ebv)
         else:
             flux_dust = flux_calibrate
              
@@ -624,17 +624,17 @@ class AGN_Powerlaw():
         Dust extinction, by default 0.1
     """
     
-    def __init__(self, config, M5100 = 1000.0, alpha = -1.5, vel = 100.0, Ebv = 0.1):
+    def __init__(self, config, m5100 = 1000.0, alpha = -1.5, vel = 100.0, ebv = 0.1):
 
         wave_rest = np.linspace(1000,20000,10000)
         flux      = wave_rest ** alpha
         
         # Flux calibration
-        flux_calibrate = calibrate(wave_rest, flux, M5100, filtername='5100')
+        flux_calibrate = calibrate(wave_rest, flux, m5100, filtername='5100')
         
         # Dust attenuation
-        if np.isscalar(Ebv):
-            flux_dust = reddening(wave_rest, flux_calibrate, ebv = Ebv)
+        if np.isscalar(ebv):
+            flux_dust = reddening(wave_rest, flux_calibrate, ebv = ebv)
         else:
             flux_dust = flux_calibrate
             
@@ -655,16 +655,16 @@ class AGN():
     ----------
     config : class
         Class of configuration
-    NLR_template : class
+    nlr_template : class
         Class of emission line template
-    BHmass : float, optional
+    bhmass : float, optional
         Black hole mass used for calculating the luminosity of power law spectrum at 5100A, 
         by default 1e6 solar mass
-    Edd_Ratio : float, optional
+    edd_ratio : float, optional
         Eddinton ratio used for calculating the luminosity of power law spectrum at 5100A, by default 0.05
-    Halpha_broad : float, optional
+    halpha_broad : float, optional
         Integral flux of Halpha broad line, by default 100.0 * 1e-17 erg/s/cm^2
-    Halpha_narrow : float, optional
+    halpha_narrow : float, optional
         Integral flux of Halpha narrow line, by default 100.0 * 1e-17 erg/s/cm^2
     vdisp_broad : float, optional
         Velocity dispersion of Halpha broad line, by default 2000.0km/s
@@ -672,45 +672,44 @@ class AGN():
         Velocity dispersion of Halpha narrow line, by default 500.0km/s
     vel : float, optional
         Line of sight velocity, by default 1000.0km/s
-    logZ : float, optional
+    logz : float, optional
         Gas-phase metallicity of narrow line region, by default 0.0
-    EBV : float, optional
+    ebv : float, optional
         Dust extinction, by default 0.1
-    Dist : float, optional
+    dist : float, optional
         Luminosity distance of AGN, by default 20.0Mpc
     """
-    def __init__(self, config, NLR_template, BHmass = 1e6, Edd_Ratio = 0.05, 
-                 Halpha_broad = 100.0, Halpha_narrow = 100.0, vdisp_broad = 2000.0, vdisp_narrow = 500.0, 
-                 vel = 1000.0, logZ = 0.0, EBV = 0.1, Dist = 20.0):
+    def __init__(self, config, nlr_template, bhmass = 1e6, edd_ratio = 0.05, 
+                 halpha_broad = 100.0, halpha_narrow = 100.0, vdisp_broad = 2000.0, vdisp_narrow = 500.0, 
+                 vel = 1000.0, logz = 0.0, ebv = 0.1, dist = 20.0):
         
-        NLR = AGN_NLR(NLR_template, config, Halpha = Halpha_narrow, logZ = logZ,
-                      vel = vel, vdisp = vdisp_narrow, Ebv = EBV)
-        if Halpha_broad > 0:
-            BLR = AGN_BLR(config, Hbeta_Flux = Halpha_broad / 2.579, 
-                          Hbeta_FWHM = vdisp_broad / 2.355, Ebv = EBV, vel = vel)
+        NLR = AGN_NLR(config, nlr_template, halpha = halpha_narrow, logz = logz,
+                      vel = vel, vdisp = vdisp_narrow, ebv = ebv)
+        if halpha_broad > 0:
+            BLR = AGN_BLR(config, hbeta_flux = halpha_broad / 2.579, 
+                          hbeta_fwhm = vdisp_broad / 2.355, ebv = ebv, vel = vel)
 
-        m5100 = BHmass_to_M5100(BHmass, Edd_ratio = Edd_Ratio, Dist = Dist)
-        PL  = AGN_Powerlaw(config, M5100 = m5100, Ebv = EBV, vel = vel)
-        Fe  = AGN_FeII(config, Hbeta_Broad = Halpha_broad / 2.579, Ebv = EBV, vel = vel)
+        m5100 = BHmass_to_M5100(bhmass, edd_ratio = edd_ratio, dist = dist)
+        PL  = AGN_Powerlaw(config, m5100 = m5100, ebv = ebv, vel = vel)
+        Fe  = AGN_FeII(config, hbeta_broad = halpha_broad / 2.579, ebv = ebv, vel = vel)
         
         self.wave = config.wave
         self.flux = NLR.flux + PL.flux + Fe.flux
         
-        if Halpha_broad > 0:
+        if halpha_broad > 0:
             self.flux = self.flux + BLR.flux
     
-        
-def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21.0):
+def BHmass_to_M5100(bhmass, edd_ratio = 0.05, dist = 21.0):
     """
     Caculate luminosity at 5100A according to the black hole mass
 
     Parameters
     ----------
-    BHmass : float
+    bhmass : float
         Black hole mass, unit: solar mass
-    Edd_ratio : float, optional
+    edd_ratio : float, optional
         Eddtington ratio, by default 0.05
-    Dist : float, optional
+    dist : float, optional
         Distance to the black hole, by default 21.0Mpc
 
     Returns
@@ -720,13 +719,13 @@ def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21.0):
     """
     
     # Calculate bolometric luminosity
-    Ledd = 3e4 * BHmass
-    Lbol = Ledd * Edd_ratio
+    Ledd = 3e4 * bhmass
+    Lbol = Ledd * edd_ratio
 
     # Convert bolometric luminosity to 5100A luminosity (Marconi et al. 2004)
     L5100 = Lbol / 10.9
     M5100 = 4.86 - 2.5 * np.log10(L5100)
-    m5100 = M5100 + 5. * np.log10(Dist * 1e5)
+    m5100 = M5100 + 5. * np.log10(dist * 1e5)
 
     return m5100
 
@@ -900,26 +899,6 @@ class StellarContinuumTemplate(object):
                 fMs[j,i] = Ms[locmin]
 
         return fMs
-
-"""
-        Modelling the spectra of stellar population
-        
-        Pars:
-            ssp        - The class of simple stellar population
-            obswave    - Wavelength, 1D-array
-            mag        - Magnitude in r-band used for the calibration of spectra, scalar
-            Age        - Mean age of stellar population used for determining the spectra profile, scalar (Gyr)
-            FeH        - Mean FeH of stellar population used for determining the spectra profile, scalar 
-            vel        - Line of sight velocity used for determining the doppler effect, scalar (km/s)
-            vdisp      - Line of sight velocity dispersion used for broadening the spectra, scalar (km/s)
-            Ebv        - Extinction, scalar (mag), default 0 (no dust extinction)
-            dFeH       - Range of FeH when searching the best templates, default 0.2 (searching the template
-                         with -0.2 < FeH - dFeh < 0.2)
-                         
-        Attri:
-            wave       - Wavelength is the same with obswave in Pars
-            flux       - Flux of best model
-        """
     
 class StellarContinuum():
     """
@@ -933,19 +912,19 @@ class StellarContinuum():
         Class of single stellar population template
     mag : float, optional
         Magnitude in SDSS r-band, by default 15.0
-    Age : float, optional
+    age : float, optional
         Median age of stellar continuum, by default 1.0Gyr
-    FeH : float, optional
+    feh : float, optional
         Metallicity of stellar continuum, by default 0.0
     vel : float, optional
         Line of sight velocity, by default 100.0km/s
     vdisp : float, optional
         Velocity dispersion, by default 120.0km/s
-    Ebv : float, optional
+    ebv : float, optional
         Dust extinction, by default 0.1
     """
-    def __init__(self, config, template, mag = 15.0, Age = 1.0, FeH = 0.0, 
-                 vel = 100.0, vdisp = 100.0, Ebv = 0.1):
+    def __init__(self, config, template, mag = 15.0, age = 1.0, feh = 0.0, 
+                 vel = 100.0, vdisp = 100.0, ebv = 0.1):
 
         # -----------------
         # Stellar Continuum
@@ -954,13 +933,13 @@ class StellarContinuum():
 
         # Select metal bins
         metals = template.metal_grid[0,:]
-        minloc = np.argmin(abs(FeH - metals))
+        minloc = np.argmin(abs(feh - metals))
         tpls = SSP_temp[:, :, minloc]
         fmass = template.fmass_ssp()[:, minloc]
         
         # Select age bins
         Ages = template.age_grid[:,0]
-        minloc = np.argmin(abs(Age-Ages))
+        minloc = np.argmin(abs(age-Ages))
         Stellar = tpls[:, minloc]
         
         wave = np.exp(template.log_lam_temp)
@@ -978,8 +957,8 @@ class StellarContinuum():
             flux0 = gaussian_filter1d(Stellar, sigma_dif)
         
         # Dust Reddening
-        if np.isscalar(Ebv):
-            flux0 = reddening(wave, flux0, ebv = Ebv)
+        if np.isscalar(ebv):
+            flux0 = reddening(wave, flux0, ebv = ebv)
             
         # Redshift
         redshift = vel / 3e5
@@ -1085,24 +1064,24 @@ class SingleStar():
         Dust extinction, by default 0.1
     """
 
-    def __init__(self, config, template, mag = 15.0, Teff = 10000.0, FeH = 0.0, vel = 100.0, Ebv = 0.0):
+    def __init__(self, config, template, mag = 15.0, teff = 10000.0, feh = 0.0, vel = 100.0, ebv = 0.0):
     
         StarTemp = template.templates
         
         # Select metal bins
-        idx_FeH = (np.abs(template.feh_grid - FeH) < 0.5)
+        idx_FeH = (np.abs(template.feh_grid - feh) < 0.5)
         tpls = StarTemp[:, idx_FeH]
         
         # Select Teff bins
         Teff_FeH = template.teff_grid[idx_FeH]
-        minloc   = np.argmin(abs(Teff - Teff_FeH))
+        minloc   = np.argmin(abs(teff - Teff_FeH))
         starspec = tpls[:, minloc]
         
         wave = np.exp(template.log_lam_temp)
         
         # Dust Reddening
-        if np.isscalar(Ebv):
-            starspec = reddening(wave, starspec, ebv = Ebv)
+        if np.isscalar(ebv):
+            starspec = reddening(wave, starspec, ebv = ebv)
             
         # Redshift
         redshift = vel / 3e5
