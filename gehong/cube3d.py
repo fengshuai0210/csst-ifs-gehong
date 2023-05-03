@@ -8,20 +8,20 @@ class Cube3D():
     """
     Class of 3-dimentional spectral cube
     """
-    def __init__(self, inst, stellar_map = None, gas_map = None):
+    def __init__(self, config, stellar_map = None, gas_map = None):
         
-        self.inst  = inst
+        self.config= config
         
-        self.nx    = inst.nx
-        self.ny    = inst.ny
-        self.dpix  = inst.dpix
-        self.fov_x = inst.fov_x
-        self.fov_y = inst.fov_y
+        self.nx    = config.nx
+        self.ny    = config.ny
+        self.dpix  = config.dpix
+        self.fov_x = config.fov_x
+        self.fov_y = config.fov_y
         
-        self.wave  = inst.wave
+        self.wave  = config.wave
         self.nz    = len(self.wave)
         self.wave0 = np.min(self.wave)
-        self.inst_fwhm = inst.inst_fwhm
+        self.inst_fwhm = config.inst_fwhm
         
         self.flux  = np.zeros((self.nx,self.ny,self.nz))
         
@@ -33,14 +33,14 @@ class Cube3D():
         for i in range(self.nx):
             for j in range(self.ny):
                 if self.stellar_map is not None:
-                    ss = StellarContinuum(stellar_tem, self.inst, mag = self.stellar_map.mag[i,j], 
-                                          Age = self.stellar_map.age[i,j], FeH = self.stellar_map.feh[i,j], 
+                    ss = StellarContinuum(self.config, stellar_tem, mag = self.stellar_map.mag[i,j], 
+                                          age = self.stellar_map.age[i,j], feh = self.stellar_map.feh[i,j], 
                                           vel = self.stellar_map.vel[i,j], vdisp = self.stellar_map.vdisp[i,j], 
-                                          Ebv = self.stellar_map.ebv[i,j])
+                                          ebv = self.stellar_map.ebv[i,j])
                 if self.gas_map is not None:
-                    gg = HII_Region(self.inst, hii_tem, Halpha = self.gas_map.halpha[i,j], 
-                                      logZ = self.gas_map.zh[i,j], vel = self.gas_map.vel[i,j], 
-                                      vdisp = self.gas_map.vdisp[i,j], Ebv = self.gas_map.ebv[i,j])
+                    gg = HII_Region(self.config, hii_tem, halpha = self.gas_map.halpha[i,j], 
+                                    logz = self.gas_map.zh[i,j], vel = self.gas_map.vel[i,j], 
+                                    vdisp = self.gas_map.vdisp[i,j], ebv = self.gas_map.ebv[i,j])
                     self.flux[i,j,:] = ss.flux + gg.flux
                 else:
                     self.flux[i,j,:] = ss.flux

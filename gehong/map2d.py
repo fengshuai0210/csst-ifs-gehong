@@ -5,37 +5,37 @@ import numpy as np
 from astropy.io import fits
 from skimage.transform import resize
 
-def Sersic2D(x, y, mag = 12, r_eff = 1, n = 2, ellip = 0.5, 
-             theta = 0, x_0 = 0, y_0 = 0, pixelscale = 0.01):
+def Sersic2D(x, y, mag = 12.0, r_eff = 1.0, n = 2.0, ellip = 0.5, 
+             theta = 0.0, x_0 = 0.0, y_0 = 0.0, pixelscale = 0.01):
     """
-    Sersic2D _summary_
+    Model of 2D - Sersic profile
 
     Parameters
     ----------
-    x : _type_
+    x : float array
         _description_
     y : _type_
         _description_
-    mag : int, optional
-        _description_, by default 12
-    r_eff : int, optional
-        _description_, by default 1
-    n : int, optional
-        _description_, by default 2
+    mag : float, optional
+        Integral magnitude of sersic model, by default 12.0
+    r_eff : float, optional
+        Effective radius in pixel, by default 1.0
+    n : float, optional
+        Sersic index, by default 2.0
     ellip : float, optional
-        _description_, by default 0.5
-    theta : int, optional
-        _description_, by default 0
-    x_0 : int, optional
-        _description_, by default 0
-    y_0 : int, optional
-        _description_, by default 0
+        Ellipticity, by default 0.5
+    theta : float, optional
+        Position angle in degree, by default 0.0
+    x_0 : float, optional
+        Offset of the center of Sersic model, by default 0.0
+    y_0 : float, optional
+        Offset of the center of Sersic model, by default 0.0
     pixelscale : float, optional
-        size of pixel in arcsec, by default 0.01
+        Size of each pixel in arcsec^2, by default 0.01
 
     Returns
     -------
-    _type_
+    
         _description_
     """
     # Produce Sersic profile
@@ -57,8 +57,8 @@ def Sersic2D(x, y, mag = 12, r_eff = 1, n = 2, ellip = 0.5,
     
     return sb_mag
 
-def VelMap2D(x, y, vmax = 200, rt = 1, ellip = 0.5, 
-             theta = 0, x_0 = 0, y_0 = 0):
+def VelMap2D(x, y, vmax = 200.0, rt = 1.0, ellip = 0.5, 
+             theta = 0.0, x_0 = 0.0, y_0 = 0.0):
     """
     VelMap2D _summary_
 
@@ -138,30 +138,31 @@ def GradMap2D(x, y, a0 = 10, r_eff = 1, gred = -1, ellip = 0.5,
     return profile
 
 class Map2d(object):
-    """
-    __init__ _summary_
 
-    Parameters
-    ----------
-    inst : _type_
-        _description_
-    """
-    def __init__(self, inst):
-        self.xsamp = inst.dpix
-        self.ysamp = inst.dpix
-        startx = -(inst.nx - 1) / 2.0 * self.xsamp
-        stopx  = (inst.nx - 1) / 2.0 * self.xsamp
-        starty = -(inst.ny - 1) / 2.0 * self.ysamp
-        stopy  = (inst.ny - 1) / 2.0 * self.ysamp
-        xvals  = np.linspace(startx, stopx, num = inst.nx)
-        yvals  = np.linspace(starty, stopy, num = inst.ny)
+    def __init__(self, config):
+        """
+        __init__ _summary_
 
-        ones = np.ones((inst.ny, inst.nx))
+        Parameters
+        ----------
+        inst : _type_
+            _description_
+        """
+        self.xsamp = config.dpix
+        self.ysamp = config.dpix
+        startx = -(config.nx - 1) / 2.0 * self.xsamp
+        stopx  = (config.nx - 1) / 2.0 * self.xsamp
+        starty = -(config.ny - 1) / 2.0 * self.ysamp
+        stopy  = (config.ny - 1) / 2.0 * self.ysamp
+        xvals  = np.linspace(startx, stopx, num = config.nx)
+        yvals  = np.linspace(starty, stopy, num = config.ny)
+
+        ones = np.ones((config.ny, config.nx))
         x = ones * xvals
-        y = np.flipud(ones * yvals.reshape(int(inst.ny), 1))
+        y = np.flipud(ones * yvals.reshape(int(config.ny), 1))
 
-        self.nx = inst.nx
-        self.ny = inst.ny
+        self.nx = config.nx
+        self.ny = config.ny
         self.x  = x
         self.y  = y
         self.row = xvals
@@ -191,7 +192,23 @@ class Map2d(object):
         ysh_rot = -xsh * np.sin(pa_radians) + ysh * np.cos(pa_radians)
         return ysh_rot, xsh_rot
     
-    def sersic_map(self, mag = 12, r_eff = 2, n = 2.5, ellip = 0.5, theta = -50):
+    def sersic_map(self, mag = 12.0, r_eff = 2.0, n = 2.5, ellip = 0.5, theta = -50.0):
+        """
+        Generate 2D map of Sersic model
+
+        Parameters
+        ----------
+        mag : float, optional
+            Integral magnitude, by default 12.0
+        r_eff : float, optional
+            Effective radius in arcsec, by default 2.0
+        n : float, optional
+            Sersic index, by default 2.5
+        ellip : float, optional
+            Ellipcity, by default 0.5
+        theta : float, optional
+            Position angle in degree, by default -50.0
+        """
         self.mag   = mag
         self.reff  = r_eff / self.xsamp
         self.n     = n
@@ -202,7 +219,21 @@ class Map2d(object):
                             ellip = self.ellip, theta = self.theta, 
                             pixelscale = self.xsamp * self.ysamp)
         
-    def tanh_map(self, vmax = 200, rt = 2, ellip = 0.5, theta = -50):
+    def tanh_map(self, vmax = 200.0, rt = 2.0, ellip = 0.5, theta = -50.0):
+        """
+        Generate 2D velocity map of rotating disk according to tanh rotation curve
+
+        Parameters
+        ----------
+        vmax : float, optional
+            Maximum rotational velocity, by default 200.0km/s
+        rt : float, optional
+            Turn-over radius of rotation curve, by default 2.0 arcsec
+        ellip : float, optional
+            Apparent ellipcity of rotating disk, by default 0.5
+        theta : float, optional
+            Position angle of rotating disk, by default -50.0
+        """
         self.vmax  = vmax
         self.rt    = rt / self.xsamp
         self.ellip = ellip
@@ -211,6 +242,22 @@ class Map2d(object):
                             ellip = self.ellip, theta = self.theta)
     
     def gred_map(self, a0 = 10, r_eff = 1, gred = -1, ellip = 0.5, theta = 0):
+        """
+        Generate 2D maps according to the radial gradient form
+
+        Parameters
+        ----------
+        a0 : float, optional
+            Amplitude at the central pixel, by default 10
+        r_eff : float, optional
+            Effective radius, by default 1
+        gred : float, optional
+            Gradient of radial profile, by default -1
+        ellip : float, optional
+            Ellipcity, by default 0.5
+        theta : int, optional
+            Position angle, by default 0
+        """
         self.a0    = a0
         self.reff  = r_eff / self.xsamp
         self.gred  = gred
@@ -220,18 +267,48 @@ class Map2d(object):
                              gred = self.gred, ellip = self.ellip, theta = self.theta)
         
     def load_map(self, image):
+        """
+        Generate 2D map according to input image
+
+        Parameters
+        ----------
+        image : 2d numpy array
+            The 2d array to be loaded.
+        """
         if np.ndim(image) == 2:
             self.map = resize(image, (self.nx, self.ny))
             
 class StellarPopulationMap():
+    """
+    Class of 2D maps for the parameters of stellar population, such as 
+    surface brightness, median age and metallicity of stellar population, 
+    velocity and velocity dispersion maps, and dust extinction.
     
-    def __init__(self, inst, sbright = None, logage = None, 
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    sbright : class, optional
+        Class of the map of surface brightness of stellar population, by default None
+    logage : class, optional
+        Class of the map of stellar age, by default None
+    feh : class, optional
+        Class of the map of stellar metellicity, by default None
+    vel : class, optional
+        Class of the map of stellar velocity, by default None
+    vdisp : class, optional
+        Class of the map of stellar velocity dispersion, by default None
+    ebv : class, optional
+        Class of the map of dust extinction, by default None
+    """
+    def __init__(self, config, sbright = None, logage = None, 
                  feh = None, vel = None, vdisp = None, ebv = None):
-        self.nx    = inst.nx
-        self.ny    = inst.ny
-        self.dpix  = inst.dpix
-        self.fov_x = inst.fov_x
-        self.fov_y = inst.fov_y
+
+        self.nx    = config.nx
+        self.ny    = config.ny
+        self.dpix  = config.dpix
+        self.fov_x = config.fov_x
+        self.fov_y = config.fov_y
         
         self.sbright = sbright.map
         self.logage  = logage.map
@@ -247,14 +324,33 @@ class StellarPopulationMap():
         self.ebv[self.ebv < 0]      = 0
         
 class IonizedGasMap():
-    
-    def __init__(self, inst, halpha = None, zh = None, vel = None, vdisp = None, ebv = None):
+    """
+    Class of 2D maps for the parameters of ionized gas, such as 
+    Halpha flux map, gas-phase metallicity map, 
+    velocity and velocity dispersion maps, and dust extinction.
+
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    halpha : class, optional
+        Class of the map of Halpha flux, by default None
+    zh : class, optional
+        Class of the map of gas-phase metallicity, by default None
+    vel : class, optional
+        Class of the map of gas velocity, by default None
+    vdisp : class, optional
+        Class of the map of gas velocity dispersion, by default None
+    ebv : class, optional
+        Class of the map of dust extinction, by default None
+    """
+    def __init__(self, config, halpha = None, zh = None, vel = None, vdisp = None, ebv = None):
         
-        self.nx    = inst.nx
-        self.ny    = inst.ny
-        self.dpix  = inst.dpix
-        self.fov_x = inst.fov_x
-        self.fov_y = inst.fov_y
+        self.nx     = config.nx
+        self.ny     = config.ny
+        self.dpix   = config.dpix
+        self.fov_x  = config.fov_x
+        self.fov_y  = config.fov_y
         
         self.halpha = halpha.map
         self.zh     = zh.map

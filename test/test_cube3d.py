@@ -24,7 +24,7 @@ class test_cube3d(unittest.TestCase):
         print(">>> Start Test")
         print(" ")
 
-        inst = c.instrument()
+        inst = c.config()
         gas_tem = s.EmissionLineTemplate(inst, model = 'hii')
         stellar_tem = s.StellarContinuumTemplate(inst)
 
@@ -63,11 +63,11 @@ class test_cube3d(unittest.TestCase):
 
         u.make_cube(stellar_tem = stellar_tem, hii_tem = gas_tem)
 
-        u.savefits('result.fits')
+        #u.savefits('result.fits')
 
         plt.figure(figsize=(16,4))
-        plt.plot(u.wave,np.log10(u.flux[50,50,:]),color='blue',label=r'$v=%4.2f$'%(velmap.map[50,50]))
-        plt.plot(u.wave,np.log10(u.flux[5,95,:]),color='red',label=r'$v=%4.2f$'%(velmap.map[5,95]))
+        plt.plot(u.wave,np.log10(u.flux[15,15,:]),color='blue',label=r'$v=%4.2f$'%(velmap.map[15,15]))
+        plt.plot(u.wave,np.log10(u.flux[5,25,:]),color='red',label=r'$v=%4.2f$'%(velmap.map[5,25]))
         plt.xlim(3500,9500)
         plt.legend(frameon=False)
         plt.savefig('./image/test_cube3d_spec.png')

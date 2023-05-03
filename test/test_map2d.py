@@ -16,7 +16,7 @@ class test_map2d(unittest.TestCase):
 
     def test_sbmap(self):
 
-        inst = c.instrument()
+        inst = c.config()
 
         print("------------------------- Sersic Model -------------------------")
         print(" ")
@@ -63,7 +63,7 @@ class test_map2d(unittest.TestCase):
 
     def test_velmap(self):
 
-        inst = c.instrument()
+        inst = c.config()
 
         print("------------------------ Velocity Model ------------------------")
         print(" ")
@@ -104,7 +104,7 @@ class test_map2d(unittest.TestCase):
 
     def test_gremap(self):
 
-        inst = c.instrument()
+        inst = c.config()
 
         print("------------------------ Gredient Model ------------------------")
         print(" ")
@@ -151,7 +151,7 @@ class test_map2d(unittest.TestCase):
 
     def test_input_image(self):
 
-        inst = c.instrument()
+        inst = c.config()
 
         print("------------------------ Feed Image------------------------")
         print(" ")
@@ -164,7 +164,7 @@ class test_map2d(unittest.TestCase):
 
     def test_stellar_population_map(self):
 
-        inst = c.instrument()
+        inst = c.config()
 
         sbmap = m.Map2d(inst)
         sbmap.sersic_map()
@@ -202,7 +202,7 @@ class test_map2d(unittest.TestCase):
 
     def test_ionized_gas_map(self):
 
-        inst = c.instrument()
+        inst = c.config()
 
         halphamap = m.Map2d(inst)
         halphamap.sersic_map()
