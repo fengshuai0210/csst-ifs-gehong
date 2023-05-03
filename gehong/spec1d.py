@@ -8,7 +8,7 @@ from astropy.io import fits
 from scipy.stats import norm
 from scipy.interpolate import interp1d
 
-data_path = os.path.dirname(__file__)
+data_path = os.getenv('GEHONG_DATA_PATH')
 
 def readcol(filename, **kwargs):
     """
@@ -551,9 +551,9 @@ class AGN_BLR():
         # Redshift
         redshift = vel / 3e5
         wave_r = wave_rest * (1 + redshift)
-        flux_red = np.interp(instrument.wave, wave_r, flux_dust)
+        flux_red = np.interp(config.wave, wave_r, flux_dust)
             
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = flux_red
 
 class AGN_FeII():
@@ -606,12 +606,26 @@ class AGN_FeII():
         self.flux = flux_red
         
 class AGN_Powerlaw():
+    
     """
-    AGN_Powerlaw _summary_
+    The class of power-law spectrum of AGN
+
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    M5100 : float, optional
+        Median flux of power law spectrum between 5050A and 5150A, by default 1000.0 * 1e-17 erg/s/cm^2
+    alpha : float, optional
+        Index of power law, by default -1.5
+    vel : float, optional
+        Line of sight velocity, by default 100.0km/s
+    Ebv : float, optional
+        Dust extinction, by default 0.1
     """
     
     def __init__(self, config, M5100 = 1000.0, alpha = -1.5, Ebv = None, vel = 100.0, Ebv = 0.1):
-        
+
         wave_rest = np.linspace(1000,20000,10000)
         flux      = wave_rest ** alpha
         
@@ -635,49 +649,58 @@ class AGN_Powerlaw():
 class AGN():
 
     """
-    Class of singal spectra for AGN
+    Class of singal spectra of AGN
 
     Parameters
     ----------
-    instrument : class
-        Instrument class
-    NLR_template : float, optional
-        Eddtington ratio, by default 0.05
-    Dist : int, optional
-        Distance to the black hole, by default 21
-
-    Returns
-    -------
-    float
-        Luminosity at 5100A
+    config : class
+        Class of configuration
+    NLR_template : class
+        Class of emission line template
+    BHmass : float, optional
+        Black hole mass used for calculating the luminosity of power law spectrum at 5100A, 
+        by default 1e6 solar mass
+    Edd_Ratio : float, optional
+        Eddinton ratio used for calculating the luminosity of power law spectrum at 5100A, by default 0.05
+    Halpha_broad : float, optional
+        Integral flux of Halpha broad line, by default 100.0 * 1e-17 erg/s/cm^2
+    Halpha_narrow : float, optional
+        Integral flux of Halpha narrow line, by default 100.0 * 1e-17 erg/s/cm^2
+    vdisp_broad : float, optional
+        Velocity dispersion of Halpha broad line, by default 2000.0km/s
+    vdisp_narrow : float, optional
+        Velocity dispersion of Halpha narrow line, by default 500.0km/s
+    vel : float, optional
+        Line of sight velocity, by default 1000.0km/s
+    logZ : float, optional
+        Gas-phase metallicity of narrow line region, by default 0.0
+    EBV : float, optional
+        Dust extinction, by default 0.1
+    Dist : float, optional
+        Luminosity distance of AGN, by default 20.0Mpc
     """
-    
-    def __init__(self, instrument, NLR_template, BHmass = 1e6, Edd_Ratio = 0.05, 
-                 Halpha_broad = 100, Halpha_narrow = 100, vdisp_broad = 2000, vdisp_narrow = 500, 
-                 vel = 1000, FeH = 0, EBV = 0.1, Dist = 20):
-
-        """
-         _summary_
-        """
+    def __init__(self, config, NLR_template, BHmass = 1e6, Edd_Ratio = 0.05, 
+                 Halpha_broad = 100.0, Halpha_narrow = 100.0, vdisp_broad = 2000.0, vdisp_narrow = 500.0, 
+                 vel = 1000.0, logZ = 0.0, EBV = 0.1, Dist = 20.0):
         
-        NLR = AGN_NLR(NLR_template, instrument, Halpha = Halpha_narrow, logZ = FeH,
+        NLR = AGN_NLR(NLR_template, config, Halpha = Halpha_narrow, logZ = logZ,
                       vel = vel, vdisp = vdisp_narrow, Ebv = EBV)
         if Halpha_broad > 0:
-            BLR = AGN_BLR(instrument, Hbeta_Flux = Halpha_broad / 2.579, 
+            BLR = AGN_BLR(config, Hbeta_Flux = Halpha_broad / 2.579, 
                           Hbeta_FWHM = vdisp_broad / 2.355, Ebv = EBV, vel = vel)
-            
+
         m5100 = BHmass_to_M5100(BHmass, Edd_ratio = Edd_Ratio, Dist = Dist)
-        PL  = AGN_Powerlaw(instrument, M5100 = m5100, Ebv = EBV, vel = vel)
-        Fe  = AGN_FeII(instrument, Hbeta_Broad = Halpha_broad / 2.579, Ebv = EBV, vel = vel)
+        PL  = AGN_Powerlaw(config, M5100 = m5100, Ebv = EBV, vel = vel)
+        Fe  = AGN_FeII(config, Hbeta_Broad = Halpha_broad / 2.579, Ebv = EBV, vel = vel)
         
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = NLR.flux + PL.flux + Fe.flux
         
         if Halpha_broad > 0:
             self.flux = self.flux + BLR.flux
     
         
-def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21):
+def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21.0):
     """
     Caculate luminosity at 5100A according to the black hole mass
 
@@ -687,8 +710,8 @@ def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21):
         Black hole mass, unit: solar mass
     Edd_ratio : float, optional
         Eddtington ratio, by default 0.05
-    Dist : int, optional
-        Distance to the black hole, by default 21
+    Dist : float, optional
+        Distance to the black hole, by default 21.0Mpc
 
     Returns
     -------
@@ -711,8 +734,7 @@ def BHmass_to_M5100(BHmass, Edd_ratio = 0.05, Dist = 21):
 # Stellar Spectra
 #################
 
-def age_metal(filename):
-    """
+"""
     Extract the age and metallicity from the name of a file of
     the MILES library of Single Stellar Population models as
     downloaded from http://miles.iac.es/ as of 2016
@@ -721,6 +743,29 @@ def age_metal(filename):
         (e.g. 'miles_library/Mun1.30Zm0.40T03.9811.fits')
     :return: age (Gyr), [M/H]
 
+    """
+
+def age_metal(filename):
+    """
+    Extract the age and metallicity from the name of a file of
+    the MILES library of Single Stellar Population models.
+
+    Parameters
+    ----------
+    filename : string
+        Full path of template files
+
+    Returns
+    -------
+    age : float
+        Age of SSP (Gyr)
+    FeH : float
+        Metallicity of SSP
+
+    Raises
+    ------
+    ValueError
+        This is not a standard MILES filename
     """
     s = path.basename(filename)
     age = float(s[s.find("T")+1:s.find("_iPp0.00_baseFe.fits")])
@@ -735,48 +780,26 @@ def age_metal(filename):
     return age, metal
 
 class StellarContinuumTemplate(object):
+    """
+    Class of single stellar population template. 
 
-    def __init__(self, instrument, velscale = 50,
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    velscale : array
+        velocity scale in km/s per pixels, by default 50.0km/s
+    pathname : string, optional
+        path with wildcards returning the list files to use, 
+        by default data_path+'/data/EMILES/Ech*_baseFe.fits'
+    normalize : bool, optional
+        Set to True to normalize each template to mean=1, by default False
+    """
+    def __init__(self, config, velscale = 50,
                  pathname = data_path + '/data/EMILES/Ech*_baseFe.fits', 
                  normalize = False):
-        """
-        Produces an array of logarithmically-binned templates by reading
-        the spectra from the Single Stellar Population (SSP) library by
-        Vazdekis et al. (2010, MNRAS, 404, 1639) http://miles.iac.es/.
-        The code checks that the model specctra form a rectangular grid
-        in age and metallicity and properly sorts them in both parameters.
-        The code also returns the age and metallicity of each template
-        by reading these parameters directly from the file names.
-        The templates are broadened by a Gaussian with dispersion
-        sigma_diff = np.sqrt(、**2 - sigma_tem**2).
 
-        Thie script relies on the files naming convention adopted by
-        the MILES library, where SSP spectra have the form below
-
-            Mun1.30Zm0.40T03.9811.fits
-
-        This code can be easily adapted by the users to deal with other stellar
-        libraries, different IMFs or different abundances.
-
-        :param pathname: path with wildcards returning the list files to use
-            (e.g. 'miles_models/Mun1.30*.fits'). The files must form a Cartesian grid
-            in age and metallicity and the procedure returns an error if they are not.
-        :param velscale: desired velocity scale for the output templates library in km/s
-            (e.g. 60). This is generally the same or an integer fraction of the velscale
-            of the galaxy spectrum.
-        :param FWHM_gal: vector or scalar of the FWHM of the instrumental resolution of
-            the galaxy spectrum in Angstrom.
-        :param normalize: set to True to normalize each template to mean=1.
-            This is useful to compute light-weighted stellar population quantities.
-        :return: The following variables are stored as attributes of the miles class:
-            .templates: array has dimensions templates[npixels, n_ages, n_metals];
-            .log_lam_temp: natural np.log() wavelength of every pixel npixels;
-            .age_grid: (Gyr) has dimensions age_grid[n_ages, n_metals];
-            .metal_grid: [M/H] has dimensions metal_grid[n_ages, n_metals].
-            .n_ages: number of different ages
-            .n_metal: number of different metallicities
-        """
-        FWHM_inst = instrument.inst_fwhm
+        FWHM_inst = config.inst_fwhm
         
         files = glob.glob(pathname)
         assert len(files) > 0, "Files not found %s" % pathname
@@ -877,16 +900,8 @@ class StellarContinuumTemplate(object):
                 fMs[j,i] = Ms[locmin]
 
         return fMs
-    
-class StellarContinuum():
 
-    """
-     _summary_
-    """
-    
-    def __init__(self, template, instrument, mag = 15, Age = 1, FeH = 0, vel = 100, vdisp = 100, Ebv = 0):
-
-        """
+"""
         Modelling the spectra of stellar population
         
         Pars:
@@ -905,7 +920,33 @@ class StellarContinuum():
             wave       - Wavelength is the same with obswave in Pars
             flux       - Flux of best model
         """
-        
+    
+class StellarContinuum():
+    """
+    The class of stellar continuum
+    
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    template : class
+        Class of single stellar population template
+    mag : float, optional
+        Magnitude in SDSS r-band, by default 15.0
+    Age : float, optional
+        Median age of stellar continuum, by default 1.0Gyr
+    FeH : float, optional
+        Metallicity of stellar continuum, by default 0.0
+    vel : float, optional
+        Line of sight velocity, by default 100.0km/s
+    vdisp : float, optional
+        Velocity dispersion, by default 120.0km/s
+    Ebv : float, optional
+        Dust extinction, by default 0.1
+    """
+    def __init__(self, config, template, mag = 15.0, Age = 1.0, FeH = 0.0, 
+                 vel = 100.0, vdisp = 100.0, Ebv = 0.1):
+
         # -----------------
         # Stellar Continuum
         
@@ -944,14 +985,14 @@ class StellarContinuum():
         redshift = vel / 3e5
         wave_r = wave * (1 + redshift)
         
-        flux = np.interp(instrument.wave, wave_r, flux0)
+        flux = np.interp(config.wave, wave_r, flux0)
         
         # Calibration
         if np.isscalar(mag):
-            flux = calibrate(instrument.wave, flux, mag, filtername='SLOAN_SDSS.r')
+            flux = calibrate(config.wave, flux, mag, filtername='SLOAN_SDSS.r')
         
         # Convert to input wavelength
-        self.wave = instrument.wave
+        self.wave = config.wave
         self.flux = flux
         
 #####################
@@ -959,9 +1000,19 @@ class StellarContinuum():
 #####################
 
 class SingleStarTemplate():
-        
-    def __init__(self, velscale = 20, FWHM_inst = 2.5):
-        
+    """
+    Class of single stellar template
+
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    velscale : float, option
+        velocity scale in km/s per pixels, by default 20.0km/s
+    """
+    def __init__(self, config, velscale = 20):
+
+        FWHM_inst = config.inst_fwhm
         filename = data_path + '/data/Starlib.XSL.fits'
         
         hdulist = fits.open(filename)
@@ -1014,15 +1065,28 @@ class SingleStarTemplate():
 class SingleStar():
 
     """
-     _summary_
-    """
-    
-    def __init__(self, template, config, mag = 15, Teff = 10000, FeH = 0, vel = 100, Ebv = 0):
+    Class of single stelar spectrum
 
-        """
-         _summary_
-        """
- 
+    Parameters
+    ----------
+    config : class
+        Class of configuration
+    template : class
+        Class of single stellar population template
+    mag : float, optional
+        Magnitude in SDSS r-band, by default 15.0
+    Teff : float, optional
+        Effective tempreture, by default 10000.0K
+    FeH : float, optional
+        Metallicity of stellar, by default 0.0
+    vel : float, optional
+        Line of sight velocity, by default 100.0km/s
+    Ebv : float, optional
+        Dust extinction, by default 0.1
+    """
+
+    def __init__(self, config, template, mag = 15.0, Teff = 10000.0, FeH = 0.0, vel = 100.0, Ebv = 0.0):
+    
         StarTemp = template.templates
         
         # Select metal bins
