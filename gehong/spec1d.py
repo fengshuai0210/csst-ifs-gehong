@@ -606,7 +606,7 @@ class AGN_FeII():
         self.flux = flux_red
         
 class AGN_Powerlaw():
-    
+
     """
     The class of power-law spectrum of AGN
 
@@ -624,7 +624,7 @@ class AGN_Powerlaw():
         Dust extinction, by default 0.1
     """
     
-    def __init__(self, config, M5100 = 1000.0, alpha = -1.5, Ebv = None, vel = 100.0, Ebv = 0.1):
+    def __init__(self, config, M5100 = 1000.0, alpha = -1.5, vel = 100.0, Ebv = 0.1):
 
         wave_rest = np.linspace(1000,20000,10000)
         flux      = wave_rest ** alpha
