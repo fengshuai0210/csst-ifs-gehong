@@ -11,3 +11,5 @@ To use ``csst-ifs-gehong``, first install it using ``pip`` (This is not availabl
 .. code-block:: console
 
     $ pip install csst-ifs-gehong
+
+:download:`example <data/example.zip>`

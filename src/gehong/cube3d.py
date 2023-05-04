@@ -49,7 +49,7 @@ class Cube3D():
         wcs = fits.Header()
         wcs_dict = {'CTYPE1': 'WAVE    ', 
                     'CUNIT1': 'Angstrom', 
-                    'CDELT1': self.inst.dlam, 
+                    'CDELT1': self.config.dlam, 
                     'CRPIX1': 1, 
                     'CRVAL1': np.min(self.wave), 
                     'CTYPE2': 'RA---TAN', 

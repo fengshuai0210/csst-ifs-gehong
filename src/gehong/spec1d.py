@@ -413,6 +413,8 @@ class HII_Region():
             idx = (sigma_gas <= sigma_LSF)
             sigma_dif[idx] = 0.1
             flux_broad = gaussian_filter1d(flux_logwave, sigma_dif)
+        else:
+            flux_broad = flux_logwave
             
         # Redshift
         redshift = vel / 3e5
