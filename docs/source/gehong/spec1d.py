@@ -1,12 +1,12 @@
 import os
-import glob
-import sys
-from os import path
-import numpy as np
-import astropy.units as u
-from astropy.io import fits
-from scipy.stats import norm
-from scipy.interpolate import interp1d
+#import glob
+#import sys
+#from os import path
+#import numpy as np
+#import astropy.units as u
+#from astropy.io import fits
+#from scipy.stats import norm
+#from scipy.interpolate import interp1d
 
 data_path = os.getenv('GEHONG_DATA_PATH')
 
@@ -667,7 +667,7 @@ class AGN():
     halpha_narrow : float, optional
         Integral flux of Halpha narrow line, by default 100.0 * 1e-17 erg/s/cm^2
     vdisp_broad : float, optional
-        Velocity dispersion of Halpha broad line, by default 2000.0km/s
+        Velocity dispersion of Halpha broad line, by default 5000.0km/s
     vdisp_narrow : float, optional
         Velocity dispersion of Halpha narrow line, by default 500.0km/s
     vel : float, optional
@@ -680,7 +680,7 @@ class AGN():
         Luminosity distance of AGN, by default 20.0Mpc
     """
     def __init__(self, config, nlr_template, bhmass = 1e6, edd_ratio = 0.05, 
-                 halpha_broad = 100.0, halpha_narrow = 100.0, vdisp_broad = 2000.0, vdisp_narrow = 500.0, 
+                 halpha_broad = 100.0, halpha_narrow = 100.0, vdisp_broad = 5000.0, vdisp_narrow = 500.0, 
                  vel = 1000.0, logz = 0.0, ebv = 0.1, dist = 20.0):
         
         NLR = AGN_NLR(config, nlr_template, halpha = halpha_narrow, logz = logz,

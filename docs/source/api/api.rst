@@ -5,5 +5,7 @@ API
    :maxdepth: 2
    :caption: Contents:
 
-   spec1d.module
-   map2d.module
+   ./config.module.rst
+   ./spec1d.module.rst
+   ./map2d.module.rst
+   ./cube3d.module.rst

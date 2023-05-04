@@ -1,9 +1,9 @@
-from __future__ import division
+#from __future__ import division
 
-import scipy.special as sp
-import numpy as np
-from astropy.io import fits
-from skimage.transform import resize
+#import scipy.special as sp
+#import numpy as np
+#from astropy.io import fits
+#from skimage.transform import resize
 
 def Sersic2D(x, y, mag = 12.0, r_eff = 1.0, n = 2.0, ellip = 0.5, 
              theta = 0.0, x_0 = 0.0, y_0 = 0.0, pixelscale = 0.01):
