@@ -387,7 +387,7 @@ class HII_Region():
             indz = np.argmin(np.abs(logz - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
         else:
-            raise ValueError('The range of logZ is not correct!')
+            raise ValueError('The value of logZ is not in the range of [-2, 0.5]!')
         
         # Make emission line spectra through adding emission lines                 
         emlines = temp.emission_lines * flux_ratio
@@ -463,7 +463,7 @@ class AGN_NLR():
             indz = np.argmin(np.abs(logz - temp.logz_grid))
             flux_ratio = temp.flux_ratio[indz, :]
         else:
-            raise ValueError('The value of logZ is not correct!')
+            raise ValueError('The value of logZ is not in the range of [-2, 0.5]!')
         
         # Make emission line spectra through adding emission lines                 
         emlines = temp.emission_lines * flux_ratio
