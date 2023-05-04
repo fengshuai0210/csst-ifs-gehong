@@ -6,13 +6,13 @@
 Welcome to Gehong's documentation!
 ==================================
 
-**`Gehong`** is a Python package for modelling the data of intergral field spectrascopy mounted on the
+**``Gehong``** is a Python package for modelling the data of intergral field spectrascopy mounted on the
 Chinese Space Station Telescopy (CSST-IFS), which can also be used for modelling the data of
 other IFS instruments. The users can feed a series of maps about the internal properties of
 galaxies (e.g. stellar age/metallicity, velocity and velocity dispersion, gas-phase metallicity) to
-the package, then the package can output a `.fits` file including a datacube for given configure of IFS instrument. 
+the package, then the package can output a ``.fits`` file including a datacube for given configure of IFS instrument. 
 
-Check out the :doc:`install` section for the installation of `gehong`, including
+Check out the :doc:`install` section for the installation of ``gehong``, including
 how to :ref:`installation` the project. 
 
 Check out the :doc:`example` section 
@@ -40,7 +40,7 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
 .. toctree::
    :hidden:
    :maxdepth: 2
-   :caption: 
+   :caption: API
 
    api/api.rst
 
