@@ -53,7 +53,7 @@ Copy the path ``/Users/sfeng/GIT/gehong_data``
     /Users/sfeng/GIT/gehong_data
 
 Add the following sentence to the file ``~/.bash_profile`` 
-(or `~/.bashrc` for Ubuntu)
+(or ``~/.bashrc`` for Ubuntu)
 
 .. code-block:: bash
 
