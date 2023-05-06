@@ -466,7 +466,7 @@ class AGN_NLR():
             raise ValueError('The value of logZ is not in the range of [-2, 0.5]!')
         
         # Make emission line spectra through adding emission lines                 
-        emlines = temp.emission_lines * flux_ratio
+        emlines = temp.emission_lines * (flux_ratio / flux_ratio[6] )
         flux_combine = np.sum(emlines, axis = 1)
         flux_calibrate = flux_combine * halpha      # Units: 1e-17 erg/s/A/cm^2
         
@@ -479,8 +479,8 @@ class AGN_NLR():
         lam_range = [np.min(temp.wave), np.max(temp.wave)]
         flux_logwave, logLam = log_rebin(lam_range, flux_dust, velscale=velscale)[:2]
         
-        sigma_gas = vdisp / velscale                                # in pixel
-        sigma_LSF = temp.FWHM_inst / (np.exp(logLam)) * 3e5 / velscale          # in pixel
+        sigma_gas = vdisp / velscale                                        # in pixel
+        sigma_LSF = temp.FWHM_inst / (np.exp(logLam)) * 3e5 / velscale      # in pixel
         
         if sigma_gas>0: 
             sigma_dif = np.zeros(len(flux_logwave))
@@ -494,7 +494,7 @@ class AGN_NLR():
         redshift = vel / 3e5
         wave_r = np.exp(logLam) * (1 + redshift)
         flux_red = np.interp(config.wave, wave_r, flux_broad)
-            
+        
         self.wave = config.wave
         self.flux = flux_red
 
@@ -520,7 +520,7 @@ class AGN_BLR():
     """
 
     def __init__(self, config, hbeta_flux = 100.0, hbeta_fwhm = 2000.0, ebv = 0.1, 
-                 vel = 0.,lam_range = [500, 15000]):
+                 vel = 0., lam_range = [500, 15000]):
 
         wave_rest = np.arange(lam_range[0], lam_range[1], 0.1)
         
@@ -577,6 +577,7 @@ class AGN_FeII():
     """
     
     def __init__(self, config, hbeta_broad = 100.0, r4570 = 0.4, ebv = 0.1, vel = 100.0):
+
         filename = data_path + '/data/FeII.AGN.fits'
         
         # Loading FeII template
