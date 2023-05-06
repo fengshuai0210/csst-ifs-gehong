@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('gehong'))
+sys.path.insert(0, os.path.abspath('./gehong'))
 
 # -- Project information -----------------------------------------------------
 
@@ -31,10 +31,10 @@ release = '1.0.0'
 
 #'sphinx.ext.duration',
 #              'sphinx.ext.doctest',
-# 'sphinx.ext.intersphinx', 
 
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
+              'sphinx.ext.intersphinx', 
               'sphinx.ext.napoleon']
 autodoc_typehints = 'description'
 
