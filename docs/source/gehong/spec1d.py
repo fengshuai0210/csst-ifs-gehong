@@ -1,14 +1,4 @@
-import os
-#import glob
-#import sys
-#from os import path
-#import numpy as np
-#import astropy.units as u
-#from astropy.io import fits
-#from scipy.stats import norm
-#from scipy.interpolate import interp1d
-
-data_path = os.getenv('GEHONG_DATA_PATH')
+data_path = 'GEHONG_DATA_PATH'
 
 def readcol(filename, **kwargs):
     """
