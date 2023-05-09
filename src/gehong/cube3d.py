@@ -67,8 +67,8 @@ class Cube3D():
         self.wcs_header = input_wcs.to_header()
         
     def insert_spec(self, spec, dx = 0, dy = 0):
-        x0 = np.int(np.round(self.inst.nx / 2.))
-        y0 = np.int(np.round(self.inst.ny / 2.))
+        x0 = np.int(np.round(self.config.nx / 2.))
+        y0 = np.int(np.round(self.config.ny / 2.))
         self.flux[x0 + dx, y0 + dy, :] = self.flux[x0 + dx, y0 + dy, :] + spec.flux
         
     def savefits(self, filename, path = './'): 
