@@ -17,11 +17,11 @@ sys.path.insert(0, os.path.abspath('./gehong/'))
 # -- Project information -----------------------------------------------------
 
 project = 'csst-ifs-gehong'
-copyright = '2023, CSST-IFS Team'
+copyright = '2024, CSST-IFS Team'
 author = 'Shuai Feng'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = '1.1.0'
 
 # -- General configuration ---------------------------------------------------
 
