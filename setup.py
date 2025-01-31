@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='csst-ifs-gehong',
-    version='1.0.0',
+    version='3.0.1',
     license='MIT',
     author="Shuai Feng",
     author_email='sfeng@hebtu.edu.cn',
