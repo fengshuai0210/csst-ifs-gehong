@@ -24,9 +24,11 @@ for modelling spectrascopy
    :maxdepth: 2
    :caption: Usage
 
-   install
+   usage/install.rst
    usage/example/config.rst
    usage/example/spec1d.rst
+   usage/example/map2d.rst
+   usage/example/cube3d.rst
 
 .. toctree::
    :maxdepth: 2
