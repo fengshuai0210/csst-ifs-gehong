@@ -18,7 +18,6 @@ how to :ref:`installation` the project.
 Check out the :doc:`example` section 
 for modelling spectrascopy
 
-Check out the :doc:`algorithm` section for the algorithm of the modelling. 
 
 .. toctree::
    :hidden:
@@ -26,7 +25,8 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
    :caption: Usage
 
    install
-   example
+   usage/example/config.rst
+   usage/example/spec1d.rst
 
 .. toctree::
    :maxdepth: 2
@@ -49,8 +49,8 @@ Check out the :doc:`algorithm` section for the algorithm of the modelling.
 :Author: Shuai Feng
 :Institute: Hebei Normal University
 :Contact: sfeng@hebtu.edu.cn
-:Last updated: 2023-04-30
-:Version: 0.0.1
+:Last updated: 2025-01-31
+:Version: 3.0.1
 :Copyright: CSST-IFS Team
 
 ----
