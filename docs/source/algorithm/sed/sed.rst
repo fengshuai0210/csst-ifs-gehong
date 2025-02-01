@@ -1,5 +1,5 @@
-Single Spectrum
-===============
+One-Demetional Spectrum
+=========================
 
 .. toctree::
    :maxdepth: 2

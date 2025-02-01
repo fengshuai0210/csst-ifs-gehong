@@ -45,7 +45,7 @@ input parameter to determine the relative fluxes of each emission line, while th
 parameter adopt a typical fixed value :math:`10^6\text{yrs}` and :math:`\log U = -2`.
 
 Reddening and Redshift Effects
--------------------------------
+-----------------------------
 
 For the emission lines of ionized gas, the treatment methods for reddening and redshift effects are the same as those for 
 the stellar continuum. It is achieved by using the dust extinction (``ebv``) and the line-of-sight velocity of the gas (``vel``) 

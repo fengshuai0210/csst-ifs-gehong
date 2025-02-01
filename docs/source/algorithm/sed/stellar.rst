@@ -1,3 +1,5 @@
+.. _algorithm_stellar_contimuum:
+
 Spectrum of Stellar Population
 ==============================
 

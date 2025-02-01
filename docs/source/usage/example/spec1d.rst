@@ -1,6 +1,6 @@
 .. _one-dimensional-spectrum-simulation:
 
-One-Dimensional Spectrum Simulation
+Mocking One-Dimentional Spetrum
 ========================================
 
 This functionality is implemented by the ``spec1d`` module.
@@ -34,12 +34,12 @@ The simulation of the stellar continuum spectrum is realized through the class `
 
 **Main Input Parameters**:
 
-- SDSS - r band magnitude (``mag``): Unit is :math:`\text{mag}`, parameter range is 8 mag to 26 mag.
-- Average age of the stellar population (``age``): Unit is :math:`\text{Gyr}`, parameter range is 0.06 Gyr to 17.8 Gyr.
-- Average metallicity of the stellar population (``feh``): Unit is :math:`\text{dex}`, parameter range is - 2.32 to 0.22.
-- Line - of - sight velocity (``vel``): Unit is :math:`\text{km s}^{-1}`, no specific parameter range.
-- Line - of - sight velocity dispersion (``vdisp``): Unit is :math:`\text{km s}^{-1}`, parameter range is greater than 0 km/s.
-- Dust extinction (``ebv``): Unit is :math:`\text{mag}`, parameter range is greater than or equal to 0 mag.
+- ``mag``: SDSS-:math:`r` band magnitude. Units: :math:`\text{mag}`, parameter range is 8 mag to 26 mag.
+- ``age``: Average age of the stellar population. Units: :math:`\text{Gyr}`, parameter range is 0.06 Gyr to 17.8 Gyr.
+- ``feh``: Average metallicity of the stellar population. Units: :math:`\text{dex}`, parameter range is - 2.32 to 0.22.
+- ``vel``: Line-of-sight velocity. Units: :math:`\text{km s}^{-1}`, no specific parameter range.
+- ``vdisp``: Line-of-sight velocity dispersion. Units: :math:`\text{km s}^{-1}`, parameter range is greater than 0 km/s.
+- ``ebv``: Dust extinction. Units: :math:`\text{mag}`, parameter range is greater than or equal to 0 mag.
 
 **Attributes**:
 
@@ -152,7 +152,7 @@ This code will simulate an AGN power - law spectrum with a magnitude of 17 mag a
 a power - law spectral index of - 1.5, a line - of - sight velocity of 10000 km/s, and 
 a dust extinction of 0.1 mag. The simulated spectrum is as follows:
 
-.. image:: https://note.youdao.com/yws/res/4/WEBRESOURCE3d30cc917638c8f2b27e37249fe5d764
+.. image:: ../../image/example_spec1d_agn_pl.png
 
 
 Narrow - Line Region Gas Emission Line Simulation
@@ -174,7 +174,7 @@ Similar to the HII region spectrum simulation, first, the class ``spec1d.Emissio
 
     nlr_temp = spec1d.EmissionLineTemplate(config, model='nlr')
 
-Narrow - Line Region Gas Emission Line Simulation
+Narrow-Line Region Gas Emission Line Simulation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The simulation of the narrow - line region emission line spectrum is achieved through the class ``spec1d.AGN_NLR``.
@@ -199,3 +199,153 @@ The simulation of the narrow - line region emission line spectrum is achieved th
 .. code-block:: python
 
     nlr = spec1d.AGN_NLR(config, nlr_temp, halpha=100, logz=0, vel=10000, vdisp=400, ebv=0
+
+This code will simulate an ionized gas emission line with an :math:`\text{H}\alpha` narrow emission line 
+flux of :math:`100 \times 10^{-17} \text{erg/s/cm}^2`, a gas - phase metallicity of :math:`\log \text{Z/Z}_\odot = 0`, 
+a line - of - sight velocity of :math:`10000\text{km/s}`, a velocity dispersion of :math:`400\text{km/s}`, 
+and a dust extinction of :math:`0.1\text{mag}`.
+
+The simulated spectrum is as follows:
+
+.. image:: ../../image/example_spec1d_agn_nlr.png
+
+
+Broad - Line Region Gas Emission Line Simulation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simulation of the broad - line region emission line spectrum is implemented through the class ``spec1d.AGN_BLR``.
+
+**Main Input Parameters**
+
+- Simulation data configuration class: ``config``
+- Narrow emission line template class: ``nlr_temp``
+- Integrated flux of the :math:`\text{H}\beta` broad emission line (``hbeta_flux``): Unit: :math:`10^{-17} \text{erg/s/cm}^2`, no specific parameter range.
+- Full - width at half - maximum of the :math:`\text{H}\beta` broad emission line (``hbeta_fwhm``): Unit: :math:`\text{km s}^{-1}`, parameter range: > 0 km/s.
+- Line - of - sight velocity (``vel``): Unit: :math:`\text{km s}^{-1}`, no specific parameter range.
+- Dust extinction (``ebv``): Unit: :math:`\text{mag}`, parameter range: ≥ 0 mag.
+
+**Attributes**
+
+- Wavelength of the AGN broad emission line spectrum (``.wave``): Unit is :math:`\text{\AA}`.
+- Flux of the AGN broad emission line spectrum (``.flux``): Unit is :math:`10^{-17} \text{erg/s/\AA/cm}^2`.
+
+**Usage Example**
+
+.. code-block:: python
+
+    blr = spec1d.AGN_BLR(config, hbeta_flux=100.0, hbeta_fwhm=5000.0, vel=10000, ebv=0.1)
+
+This code will simulate an AGN broad emission line spectrum with an :math:`\text{H}\beta` broad emission line 
+flux of :math:`100 \times 10^{-17} \text{erg/s/cm}^2`, a full - width at half - maximum of the :math:`\text{H}\beta` 
+broad emission line of :math:`500\text{km/s}`, a line - of - sight velocity of :math:`10000\text{km/s}`, 
+and a dust extinction of :math:`0.1\text{mag}`.
+
+The simulated spectrum is as follows:
+
+.. image:: ../../image/example_spec1d_agn_blr.png
+
+
+Iron Emission Line Spectrum Simulation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simulation of the iron - line emission in AGN is implemented through the class ``spec1d.AGN_FeII``.
+
+**Main Input Parameters**
+
+- Simulation data configuration class: ``config``
+- Integrated flux of the :math:`\text{H}\beta` broad emission line (``hbeta_broad``): Unit: :math:`10^{-17} \text{erg/s/cm}^2`, no specific parameter range.
+- Ratio of the :math:`\text{H}\beta` broad emission line flux to the :math:`\text{Fe}4750` emission line flux (``r4750``): Unit: none, no specific parameter range.
+- Line - of - sight velocity (``vel``): Unit: :math:`\text{km s}^{-1}`, no specific parameter range.
+- Dust extinction (``ebv``): Unit: :math:`\text{mag}`, parameter range: ≥ 0 mag.
+
+**Attributes**
+
+- Wavelength of the AGN iron emission line spectrum (``.wave``): Unit is :math:`\text{\AA}`.
+- Flux of the AGN iron emission line spectrum (``.flux``): Unit is :math:`10^{-17} \text{erg/s/\AA/cm}^2`.
+
+**Usage Example**
+
+.. code-block:: python
+
+    fe = spec1d.AGN_FeII(config, hbeta_broad=100.0, r4570=0.4, vel=10000.0, ebv=0.1)
+
+This code will simulate an AGN iron emission line spectrum with an :math:`\text{H}\beta` broad emission line 
+flux of :math:`100 \times 10^{-17} \text{erg/s/cm}^2`, a ratio of the :math:`\text{H}\beta` broad emission 
+line flux to the :math:`\text{Fe}4750` emission line flux of :math:`0.4`, a line - of - sight velocity of 
+:math:`10000\text{km/s}`, and a dust extinction of :math:`0.1\text{mag}`.
+
+The simulated spectrum is as follows:
+
+.. image:: ../../image/example_spec1d_agn_fe.png
+
+
+Synthesis of AGN Total Spectrum
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simulation of the AGN spectrum can be achieved by simulating the above four components separately 
+and then superimposing them. As shown below:
+
+.. code-block:: python
+
+    pl = spec1d.AGN_Powerlaw(config, m5100 = 18, alpha = -1.5, vel = 10000, ebv = 0.1)
+    nlr = spec1d.AGN_NLR(config, nlr_temp, halpha = 500, logz = -0.3, vel = 10000, vdisp = 400, ebv = 0.1)
+    blr = spec1d.AGN_BLR(config, hbeta_flux = 500, hbeta_fwhm = 5000.0, vel = 10000, ebv = 0.1)
+    fe = spec1d.AGN_FeII(config, hbeta_broad = 500.0, r4570 = 0.4, ebv = 0.1, vel = 10000)
+
+Superimpose the fluxes of the four components:
+
+.. code-block:: python
+
+    flux = pl.flux + nlr.flux + blr.flux + fe.flux
+
+Then, the black AGN spectrum in the following figure is obtained. The four components are represented by 
+the orange line (power - law spectrum), the blue line (narrow emission line), the red line (broad emission line), 
+and the green line (iron emission line) in the figure respectively.
+
+.. image:: ../../image/example_spec1d_agn_sum.png
+
+
+Simulation of AGN Total Spectrum
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The AGN spectrum can also be simulated directly through the class ``spec1d.AGN`` with all four components.
+
+**Main Input Parameters**
+
+- Simulation data configuration class: ``config``
+- Narrow emission line template class: ``nlr_temp``
+- Black hole mass (``bhmass``): Unit: :math:`\text{M}_\odot`, parameter range: ≥ 0.
+- Eddington ratio (``edd_ratio``): Unit: none, parameter range: ≥ 0.
+- AGN distance (``dist``): Unit: :math:`\text{Mpc}`, parameter range: ≥ 0 Mpc.
+- Integrated flux of the :math:`\text{H}\alpha` broad emission line (``halpha_broad``): Unit: :math:`10^{-17} \text{erg/s/cm}^2`, parameter range: ≥ 0.
+- Integrated flux of the :math:`\text{H}\alpha` narrow emission line (``halpha_narrow``): Unit: :math:`10^{-17} \text{erg/s/cm}^2`, parameter range: ≥ 0.
+- Velocity dispersion of the broad emission line (``vdisp_broad``): Unit: :math:`\text{km s}^{-1}`, parameter range: > 0 km/s.
+- Velocity dispersion of the narrow emission line (``vdisp_narrow``): Unit: :math:`\text{km s}^{-1}`, parameter range: > 0 km/s.
+- Gas - phase metallicity (``logz``): Unit: :math:`\text{dex}`, parameter range: - 2.3 ~ 0.54.
+- Line - of - sight velocity (``vel``): Unit: :math:`\text{km s}^{-1}`, no specific parameter range.
+- Dust extinction (``ebv``): Unit: :math:`\text{mag}`, parameter range: ≥ 0 mag.
+
+**Attributes**
+
+- Wavelength of the AGN spectrum (``.wave``): Unit is :math:`\text{\AA}`.
+- Flux of the AGN spectrum (``.flux``): Unit is :math:`10^{-17} \text{erg/s/\AA/cm}^2`.
+
+**Usage Example**
+
+.. code-block:: python
+
+    agn = spec1d.AGN(config, nlr_temp, bhmass=1000000, edd_ratio=0.05, dist=20, 
+                     halpha_broad=500, halpha_narrow=500, vdisp_broad=5000, 
+                     vdisp_narrow=500, logz=0, vel=10000, ebv=0.1)
+
+This code will simulate an AGN spectrum with a black hole mass of :math:`10^6\text{M}_\odot`, 
+an Eddington ratio of :math:`0.05`, a distance of :math:`20\text{Mpc}`, an :math:`\text{H}\alpha` 
+broad emission line flux of :math:`500 \times 10^{-17} \text{erg/s/cm}^2`, an :math:`\text{H}\alpha` 
+narrow emission line flux of :math:`500 \times 10^{-17} \text{erg/s/cm}^2`, a velocity dispersion of the 
+broad emission line of :math:`5000\text{km/s}`, a velocity dispersion of the narrow emission line 
+of :math:`500\text{km/s}`, a gas - phase metallicity of :math:`\log \text{ Z/Z}_\odot=0`, 
+a line-of-sight velocity of :math:`10000\text{km/s}`, and a dust extinction of :math:`0.1\text{mag}`.
+
+The simulated spectrum is as follows:
+
+.. image:: ../../image/example_spec1d_agn_total.png

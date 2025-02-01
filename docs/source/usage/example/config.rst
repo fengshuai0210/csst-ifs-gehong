@@ -1,6 +1,6 @@
 .. _simulation-data-format-configuration:
 
-Configuration of Simulation Data Format
+Configuration of Data Format
 =======================================
 
 The class ``config.config`` is used to configure the format of the simulated spectrum, 

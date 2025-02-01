@@ -1,6 +1,6 @@
 .. _2d-image-simulation:
 
-Two - Dimensional Image Simulation
+Mocking Two-Dimensional Map
 =====================================
 
 This simulation is implemented by the ``map2d`` module.

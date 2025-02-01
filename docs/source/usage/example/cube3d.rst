@@ -1,6 +1,6 @@
 .. _section-5-three-dimensional-data-cube-simulation:
 
-Three - Dimensional Data Cube Simulation
+Mocking Three-Dimensional Cube
 ===========================================
 
 This simulation is implemented by the ``cube3d`` module. In the following, an example will be used to introduce 
