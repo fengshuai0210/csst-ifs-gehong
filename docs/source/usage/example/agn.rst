@@ -22,77 +22,101 @@ The narrow-line region (NLR) template is initialized using the ``EmissionLineTem
 AGN Component Simulations
 --------------------------
 
-1. **Power-Law Continuum**
+Power-Law Continuum
+~~~~~~~~~~~~~~~~~~~~
 
-   Simulates the AGN featureless continuum as a power law.
+Simulates the AGN featureless continuum as a power law.
 
-   **Input Parameters**:
+**Input Parameters**:
 
-   - ``m5100``: Apparent magnitude at 5100 Å
-   - ``alpha``: Spectral slope index
-   - ``vel``: Line-of-sight velocity (km/s)
-   - ``ebv``: Dust extinction E(B-V)
+- ``m5100``: Apparent magnitude at 5100 Å
+- ``alpha``: Spectral slope index
+- ``vel``: Line-of-sight velocity (km/s)
+- ``ebv``: Dust extinction E(B-V)
 
-   **Usage Example**:
+**Usage Example**:
 
-   .. code-block:: python
+.. code-block:: python
 
-       pl = spec1d.AGN_Powerlaw(config, m5100=17, alpha=-1.5, vel=10000, ebv=0.1)
+    pl = spec1d.AGN_Powerlaw(config, m5100=17, alpha=-1.5, vel=10000, ebv=0.1)
 
-2. **Narrow-Line Region (NLR)**
 
-   Simulates the narrow emission lines in AGN spectra.
+.. image:: /_static/image/example_spec1d_agn_pl.png
+   :align: center
 
-   **Input Parameters**:
 
-   - ``halpha``: Hα narrow-line flux (:math:`10^{-17}\ \mathrm{erg\ s^{-1}\ cm^{-2}\ Å^{-1}}`)
-   - ``logz``: Gas-phase metallicity [Z/H] (dex)
-   - ``vel``: Line-of-sight velocity (km/s)
-   - ``vdisp``: Velocity dispersion (km/s)
-   - ``ebv``: Dust extinction E(B-V)
+Narrow-Line Region (NLR)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   **Usage Example**:
+Simulates the narrow emission lines in AGN spectra.
 
-   .. code-block:: python
+**Input Parameters**:
 
-       nlr = spec1d.AGN_NLR(config, nlr_temp, halpha=300, logz=0, 
-                            vel=10000, vdisp=300, ebv=0.1)
+- ``halpha``: Hα narrow-line flux (:math:`10^{-17}\ \mathrm{erg\ s^{-1}\ cm^{-2}\ Å^{-1}}`)
+- ``logz``: Gas-phase metallicity [Z/H] (dex)
+- ``vel``: Line-of-sight velocity (km/s)
+- ``vdisp``: Velocity dispersion (km/s)
+- ``ebv``: Dust extinction E(B-V)
 
-3. **Broad-Line Region (BLR)**
+**Usage Example**:
 
-   Simulates the broad Hβ emission from the BLR.
+.. code-block:: python
 
-   **Input Parameters**:
+    nlr = spec1d.AGN_NLR(config, nlr_temp, halpha=300, logz=0, 
+                         vel=10000, vdisp=300, ebv=0.1)
 
-   - ``hbeta_flux``: Hβ broad-line flux
-   - ``hbeta_fwhm``: Full width at half maximum (FWHM) of Hβ line (km/s)
-   - ``vel``: Line-of-sight velocity (km/s)
-   - ``ebv``: Dust extinction E(B-V)
 
-   **Usage Example**:
+.. image:: /_static/image/example_spec1d_agn_nlr.png
+   :align: center
 
-   .. code-block:: python
 
-       blr = spec1d.AGN_BLR(config, hbeta_flux=150, hbeta_fwhm=4000, 
-                            vel=10000, ebv=0.1)
+Broad-Line Region (BLR)
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-4. **Fe II Complex**
+Simulates the broad Hβ emission from the BLR.
 
-   Simulates the blended Fe II emission near Hβ.
+**Input Parameters**:
 
-   **Input Parameters**:
+- ``hbeta_flux``: Hβ broad-line flux
+- ``hbeta_fwhm``: Full width at half maximum (FWHM) of Hβ line (km/s)
+- ``vel``: Line-of-sight velocity (km/s)
+- ``ebv``: Dust extinction E(B-V)
 
-   - ``hbeta_broad``: Hβ broad-line flux (used to scale Fe II)
-   - ``r4570``: Fe II to Hβ flux ratio
-   - ``vel``: Line-of-sight velocity (km/s)
-   - ``ebv``: Dust extinction E(B-V)
+**Usage Example**:
 
-   **Usage Example**:
+.. code-block:: python
 
-   .. code-block:: python
+    blr = spec1d.AGN_BLR(config, hbeta_flux=150, hbeta_fwhm=4000, 
+                         vel=10000, ebv=0.1)
 
-       fe = spec1d.AGN_FeII(config, hbeta_broad=150, r4570=0.5, 
-                            vel=10000, ebv=0.1)
+
+.. image:: /_static/image/example_spec1d_agn_blr.png
+   :align: center
+
+
+Fe II Complex
+~~~~~~~~~~~~~~~
+
+Simulates the blended Fe II emission near Hβ.
+
+**Input Parameters**:
+
+- ``hbeta_broad``: Hβ broad-line flux (used to scale Fe II)
+- ``r4570``: Fe II to Hβ flux ratio
+- ``vel``: Line-of-sight velocity (km/s)
+- ``ebv``: Dust extinction E(B-V)
+
+**Usage Example**:
+
+.. code-block:: python
+
+    fe = spec1d.AGN_FeII(config, hbeta_broad=150, r4570=0.5, 
+                         vel=10000, ebv=0.1)
+
+
+.. image:: /_static/image/example_spec1d_agn_fe.png
+   :align: center
+
 
 Combining AGN Components
 -------------------------
@@ -104,6 +128,9 @@ Each component produces a spectrum on the same wavelength grid, and they can be 
 .. code-block:: python
 
     flux = pl.flux + nlr.flux + blr.flux + fe.flux
+
+.. image:: /_static/image/example_spec1d_agn_sum.png
+   :align: center
 
 Output Attributes
 ------------------
