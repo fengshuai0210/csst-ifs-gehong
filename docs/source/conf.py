@@ -21,7 +21,7 @@ copyright = '2025, CSST-IFS Team'
 author = 'Shuai Feng'
 
 # The full version, including alpha/beta/rc tags
-release = '3.0.1'
+release = '3.1.0'
 
 # -- General configuration ---------------------------------------------------
 
@@ -60,4 +60,21 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
+
+# 添加静态资源路径
 html_static_path = ['_static']
+
+# 设置 logo（相对于 _static 路径）
+html_logo = '_static/gehong_logo.png'
+
+# 可选：为了让 logo 更好看，设置主题选项（对 alabaster、sphinx_rtd_theme 等有效）
+html_theme_options = {
+    'logo_only': True,        # 只显示 logo，不显示项目名（可选）
+    'display_version': False  # 不显示版本号（可选）
+}
+
+# conf.py 中允许 HTML 写入
+rst_prolog = """
+.. role:: raw-html(raw)
+   :format: html
+"""
