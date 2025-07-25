@@ -2,27 +2,68 @@ Three-Dimensional Cube
 =======================
 
 The main task of three-dimensional cube generation is to arrange and integrate one-dimensional spectra according 
-to the spatial positions provided by the two - dimensional map. In practice, we use the module ``cube3d`` to 
-achieve this goal, whose working principle is as follows. Given the two-dimensional map :math:`\mathcal{M}(x, y)` 
-of the galaxy, for the spatial position :math:`(x_i, y_i)`, we simulate the one-dimensional 
-spectrum :math:`\mathcal{S}(\lambda)` based on the physical parameters :math:`\mathcal{M}(x_i, y_i)`. 
-This spectrum is adopted as :math:`\mathcal{C}(x_i, y_i, \lambda)` in the three-dimensional spectrum of the galaxy. 
-We perform the above process by traversing all spatial positions :math:`(x, y)`, thus realizing the mock of the 
-three-dimensional spectrum :math:`\mathcal{C}(x, y, \lambda)` of the galaxy. Therefore, the input parameters of the ``cube3d`` 
-module include the classes constructed by the ``map2d`` modules.
+to the spatial positions provided by the two-dimensional map. This is achieved via the ``cube3d`` module, which 
+constructs mock IFS data cubes for galaxies and other extended sources.
 
-The spectrum of a galaxy usually contains both emission lines and the stellar continuum. Then, the two-dimensional maps 
-used for the mock of the data cube should contain both ionized gas information (such as :math:`\ha` emission line flux) 
-and stellar population information (such as magnitude). If the simulated galaxy does not include gas emission lines, 
-such as early-type galaxies, then the two-dimensional maps only need to contain stellar population information. 
-If simulating pure gas emission line sources, such as HII regions, only two-dimensional maps related to ionized gas 
-need to be provided. 
+Core Principle
+--------------
 
-The above is the mock for target sources with relatively simple structures. For some target sources with more complex 
-structures, we need to decompose them into several simple sources. The data cube of each simple source is simulated 
-separately and then combined to obtain the final data cube of the target source. For example, to simulate a galaxy 
-with strong gas outflows, the galaxy should be decomposed into at least two parts: a normal galaxy and an outflowing 
-ionized gas. Among them, the data cube of the normal galaxy is simulated according to the method introduced in the previous 
-paragraph. The cube mock of the outflowing gas is equivalent to the mock of a pure emission line source, and only 
-the emission lines need to be simulated. Then, by combining the two simulated cubes, the data cube of the galaxy with 
-strong gas outflows is obtained.
+Given a set of two-dimensional physical parameter maps :math:`\mathcal{M}(x, y)`, the ``cube3d`` module generates 
+a one-dimensional spectrum :math:`\mathcal{S}(\lambda)` at each spatial position :math:`(x_i, y_i)` by calling the 
+appropriate spectral synthesis modules (e.g., ``StellarContinuum``, ``HII_Region``, ``AGN``). The resulting spectrum 
+is then stored as the voxel :math:`\mathcal{C}(x_i, y_i, \lambda)` in the final data cube:
+
+.. math::
+
+   \mathcal{C}(x, y, \lambda) = \mathcal{S}(\lambda; \mathcal{M}(x, y))
+
+By looping over all valid pixels, the full three-dimensional mock cube :math:`\mathcal{C}(x, y, \lambda)` is assembled.
+
+The ``cube3d`` module automatically distinguishes the type of input (stellar or gas component) based on the input map classes 
+(``StellarPopulationMap``, ``IonizedGasMap``, etc.), and calls the corresponding model to simulate the spectrum. The wavelength 
+grid is shared across all components and defined by the configuration object.
+
+Component Combination
+----------------------
+
+The spectrum of a galaxy typically includes both stellar continuum and nebular emission lines. The final data cube is constructed 
+by adding the simulated stellar and gas components:
+
+.. math::
+
+   \mathcal{C}_\text{total} = \mathcal{C}_\text{stars} + \mathcal{C}_\text{gas} + \mathcal{C}_\text{AGN}
+
+This modular design allows each component to be simulated separately, ensuring physical consistency and interpretability. The 
+relative contributions of different components can be controlled via the corresponding 2D maps (e.g., Hα flux, magnitude, star 
+formation rate).
+
+Supported Use Cases
+--------------------
+
+Depending on the input maps provided, the cube simulation supports a wide range of scenarios:
+
+- **Stellar-only galaxies**: e.g., early-type galaxies, use only ``StellarPopulationMap``.
+- **Emission-line dominated sources**: e.g., HII regions, star-forming blobs, provide only ``IonizedGasMap``.
+- **Full galaxy systems**: include both ``StellarPopulationMap`` and ``IonizedGasMap`` for realistic disk galaxies.
+- **AGN-hosting galaxies**: add ``AGN_PhysicalModel`` or ``AGN`` component to simulate central AGN emission.
+
+Complex Structures and Composite Sources
+----------------------------------------
+
+For more complex systems (e.g., galaxies with outflows, mergers, or superposed sources), the simulation can be 
+decomposed into multiple independent components. Each component is modeled and simulated individually, and the 
+resulting cubes are combined to form the final datacube:
+
+.. math::
+
+   \mathcal{C}_\text{final} = \sum_i \mathcal{C}_i
+
+This approach allows users to simulate:
+
+- AGN outflows as an additional ionized gas cube with custom velocity and metallicity;
+- Merging galaxies as two distinct sources with independent dynamics and populations;
+- Background or foreground sources in the same field of view.
+
+Each individual cube is aligned on the same spatial and spectral grid and added voxel-by-voxel. This structure provides 
+maximum flexibility for constructing realistic IFS datasets.
+
