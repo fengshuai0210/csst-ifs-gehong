@@ -1,5 +1,5 @@
-One-Dimensional Spectrum Modeling
-=================================
+One-Dimensional Spectrum 
+=========================
 
 GEHONG provides physical models for simulating one-dimensional (1D) spectra of various astrophysical sources. These models are the building blocks for constructing spatially resolved 2D and 3D spectral datacubes.
 
