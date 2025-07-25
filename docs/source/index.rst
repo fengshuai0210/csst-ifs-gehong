@@ -1,9 +1,11 @@
-.. raw:: html
+GEHONG: A Python Package for Simulating IFS Spectral Data Cubes
+================================================================
 
-   <div align="center">
-       <img src="_static/gehong_logo.png" alt="GEHONG Logo" height="200">
-       <h1>GEHONG: A Python Package for Simulating IFS Spectral Data Cubes</h1>
-   </div>
+.. image:: ./image/gehong_logo.png
+   :alt: GEHONG Logo
+   :align: center
+   :height: 250px
+
 
 
 **GEHONG** (GEnerate tHe data Of iNtegral field spectrograph of Galaxy) is a Python package
