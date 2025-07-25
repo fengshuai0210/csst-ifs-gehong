@@ -14,5 +14,4 @@ If you use GEHONG in your research or publication, please cite the following wor
   number       = {0},
   pages        = {000--000},
   note         = {Accepted, in press},
-  url          = {https://csst-ifs-gehong.readthedocs.io}
-}
+  url          = {https://csst-ifs-gehong.readthedocs.io}}
