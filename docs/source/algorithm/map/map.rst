@@ -4,7 +4,7 @@ Two-Dimensional Map
 To simulate IFS data of extended sources (e.g., galaxies), a set of two-dimensional (2D) physical parameter maps is required.
 These maps are classified into two major categories:
 
-- **Stellar Component Maps**: describing the distributions of stellar properties used to construct stellar continuum spectra (see Section :ref:`algorithm_stellar_contimuum`). These include maps of surface brightness, stellar age, and stellar metallicity. All these maps are handled by the ``map2d.StellarPopulationMap`` module.
+- **Stellar Component Maps**: describing the distributions of stellar properties used to construct stellar continuum spectra (see Section :ref:`stellar-continuum`). These include maps of surface brightness, stellar age, and stellar metallicity. All these maps are handled by the ``map2d.StellarPopulationMap`` module.
 
 - **Gas Component Maps**: describing the distributions related to ionized gas, including those used to simulate emission-line spectra (see Section :ref:`ionized-gas-emission-lines`). These include the :math:`\text{H}\alpha` flux map, gas-phase metallicity, etc., and are combined via the ``map2d.IonizedGasMap`` module.
 
@@ -12,7 +12,7 @@ Each map module accepts two-dimensional arrays as inputs and constructs pixel-by
 
 In addition to model-based generation, all modules support importing observational or simulation-based data cubes as custom maps. This enables flexible hybrid modeling combining empirical and analytic inputs.
 
-To achieve realistic IFS simulations, the physical maps should exhibit detailed spatial structures, as illustrated in Figure :ref:`fig_case_map2d`. Ideally, such maps are derived from real high-resolution observations or hydrodynamic simulations. As a practical alternative, we provide a set of parametric 2D models:
+To achieve realistic IFS simulations, the physical maps should exhibit detailed spatial structures, as illustrated in following Figure. Ideally, such maps are derived from real high-resolution observations or hydrodynamic simulations. As a practical alternative, we provide a set of parametric 2D models:
 
 - ``map2d.sersic_map`` for surface brightness profiles;
 - ``map2d.tanh_map`` for velocity fields;
@@ -20,9 +20,12 @@ To achieve realistic IFS simulations, the physical maps should exhibit detailed 
 
 .. _fig_case_map2d:
 
-.. figure:: ../../image/example_map2d_3case.png
+.. figure:: /_static/image/example_map2d_3case.png
    :alt: Example of three 2D models
    :align: center
+
+   Example of three types of parametric 2D model maps used in GEHONG: Sersic brightness profile, rotation velocity field, and radial gradients.
+
 
 StellarPopulationMap
 ---------------------
