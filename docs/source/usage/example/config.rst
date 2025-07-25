@@ -1,33 +1,84 @@
 .. _simulation-data-format-configuration:
 
 Configuration of Data Format
-=======================================
+============================
 
-The class ``config.config`` is used to configure the format of the simulated spectrum, 
-including the configuration in the one-dimensional wavelength direction and the two-dimensional spatial direction.
+The ``config.Config`` class defines the global configuration of spectral and spatial grids for all simulations in GEHONG. 
+It determines the wavelength range, sampling step, spatial resolution, and field-of-view of simulated spectra and data cubes. 
+This configuration is required by all modules, including 1D spectra, 2D maps, and 3D datacubes.
 
-**Main Input Parameters**
+Three Usage Modes
+-----------------
 
-- Blue - end limit of wavelength: ``wave_min``, unit: :math:`\mathring{\text{A}}`
-- Red - end limit of wavelength: ``wave_max``, unit: :math:`\mathring{\text{A}}`
-- Wavelength interval: ``dlam``, unit: :math:`\mathring{\text{A}}`
-- Number of pixels in the x - direction: ``nx``
-- Number of pixels in the y - direction: ``ny``
-- Pixel size: ``dpix``, unit: :math:`\text{arcsec}`
+The class supports three configuration modes:
 
-When ``config`` is configured with the following parameters:
+- ``mode='sim'``: Preset for use with ``csst-ifs-sim``, the CSST CCD image simulator.
+- ``mode='etc'`` (default): Preset for use with ``csst-ifs-etc``, the exposure time calculator.
+- ``mode=None``: Fully customized mode. All parameters must be specified manually.
 
-.. code - block:: python
+Spectral Configuration
+----------------------
 
-    from gehong import config
-    config = config.config(wave_min = 3000, wave_max = 10500, dlam = 1.5, nx = 100, ny = 100, dpix = 0.1)
+The wavelength grid is defined by:
 
-The simulated one-dimensional spectrum is a one-dimensional array with a wavelength ranging 
-from :math:`3000\mathring{\text{A}}` to :math:`10500\mathring{\text{A}}`, a wavelength interval 
-of :math:`1.5\mathring{\text{A}}`, and containing 5000 elements. 
+- ``wave_min`` : Starting wavelength (:math:`\mathring{\text{A}}`)
+- ``wave_max`` : Ending wavelength (:math:`\mathring{\text{A}}`)
+- ``dlam``     : Wavelength step size (:math:`\mathring{\text{A}}`)
 
-The simulated two-dimensional image is a two-dimensional array with a field-of-view size 
-of 10 arcseconds × 10 arcseconds, a single-pixel size of 0.1 arcseconds × 0.1 arcseconds, 
-and a total of 100 × 100 elements. 
+Internally, these parameters define a 1D wavelength array:
 
-The simulated three-dimensional data cube is a 100 × 100 × 5000 three-dimensional data.
+.. math::
+
+   \lambda = \text{np.arange}(\text{wave\_min}, \text{wave\_max}, \text{dlam})
+
+Spatial Configuration
+---------------------
+
+The spatial field of view (FoV) is modeled as a regular grid of square spaxels, with:
+
+- ``nx`` : Number of pixels along the X axis
+- ``ny`` : Number of pixels along the Y axis
+- ``dpix`` : Size of each spaxel (in arcseconds)
+
+The total field of view is then:
+
+.. math::
+
+   \text{FoV}_x = nx \times dpix \\
+   \text{FoV}_y = ny \times dpix
+
+Preset Parameters
+-----------------
+
+The built-in presets for ``mode='etc'`` and ``mode='sim'`` are as follows:
+
++---------+------------+------------+--------+-----+-----+--------+
+| Mode    | wave_min   | wave_max   | dlam   | nx  | ny  | dpix  |
++=========+============+============+========+=====+=====+========+
+| etc     | 3500       | 10000      | 2.0    | 30  | 30  | 0.2    |
++---------+------------+------------+--------+-----+-----+--------+
+| sim     | 3000       | 10500      | 1.0    | 100 | 100 | 0.1    |
++---------+------------+------------+--------+-----+-----+--------+
+
+Usage Example
+-------------
+
+Here is an example of creating a custom configuration:
+
+.. code-block:: python
+
+   from gehong import config
+
+   # Fully custom configuration
+   cfg = config.Config(
+       mode=None,
+       wave_min=3500.0,
+       wave_max=9000.0,
+       dlam=1.0,
+       nx=64,
+       ny=64,
+       dpix=0.15
+   )
+
+   print("Wavelength grid size:", len(cfg.wave))     # e.g., 5500 pixels
+   print("Field of view (arcsec):", cfg.fov_x, "x", cfg.fov_y)
