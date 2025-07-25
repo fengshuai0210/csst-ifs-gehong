@@ -115,5 +115,14 @@ Next Steps
 
 If everything is installed and configured correctly, you're ready to start using GEHONG.
 
-👉 We recommend starting with the :doc:`Quickstart Guide <quickstart>`, which introduces example workflows using interactive Jupyter notebooks.
+.. 👉 We recommend starting with the :doc:`Quickstart Guide <quickstart>`, which introduces example workflows using interactive Jupyter notebooks.
+
+We recommend beginning with the following module-specific examples. These tutorials demonstrate how to configure parameters and generate synthetic spectra or maps for different physical components.
+
+To get started with practical usage, refer to:
+
+- :doc:`Configuration setup <example/config>`
+- :doc:`Stellar population spectrum simulation <example/spec1d>`
+- :doc:`2D map construction <example/map2d>`
+- :doc:`3D datacube generation <example/cube3d>`
 
