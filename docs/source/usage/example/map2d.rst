@@ -99,7 +99,8 @@ of :math:`- 30\text{degree}$`.
 
 The simulated two - dimensional distribution is as follows:
 
-.. image:: ../../image/example_map2d_sersic.png
+.. image:: /_static/image/example_map2d_sersic.png
+   :align: center
 
 
 Tanh Velocity Field Model
@@ -132,7 +133,8 @@ a position angle of :math:`30\text{degree}`.
 
 The simulated two - dimensional distribution is as follows:
 
-.. image:: ../../image/example_map2d_tanh.png
+.. image:: /_static/image/example_map2d_tanh.png
+   :align: center
 
 
 Two - Dimensional Gradient Model
@@ -164,4 +166,6 @@ This code will simulate a two - dimensional distribution with a central intensit
 
 The simulated two - dimensional distribution is as follows:
 
-.. image:: ../../image/example_map2d_gred.png
+
+.. image:: /_static/image/example_map2d_gred.png
+   :align: center
