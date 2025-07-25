@@ -29,7 +29,7 @@ Internally, these parameters define a 1D wavelength array:
 
 .. math::
 
-   \lambda = \text{np.arange}(\text{wave\_min}, \text{wave\_max}, \text{dlam})
+   \lambda = \texttt{np.arange(wave_min, wave_max, dlam)}
 
 Spatial Configuration
 ---------------------
