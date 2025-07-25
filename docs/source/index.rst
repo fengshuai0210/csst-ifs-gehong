@@ -1,7 +1,7 @@
 GEHONG: A Python Package for Simulating IFS Spectral Data Cubes
 ================================================================
 
-.. image:: ./image/gehong_logo.png
+.. image:: /_static/gehong_logo.png
    :alt: GEHONG Logo
    :align: center
    :height: 250px
