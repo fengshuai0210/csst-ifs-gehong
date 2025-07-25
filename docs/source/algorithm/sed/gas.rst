@@ -3,51 +3,119 @@
 Ionized Gas Emission Lines
 ==========================
 
-In current version, the emission lines of ionized gas within galaxies only consider the contribution of HII regions, 
-and their generation is implemented by the ``spec1d.HII_Region`` module. 
+In the current version, the emission lines of ionized gas in galaxies are modeled exclusively as originating from star-forming HII regions. These are implemented through the ``spec1d.HII_Region`` class.
+
+Overview
+--------
+
+The synthetic spectrum of ionized gas is constructed by combining multiple emission lines with Gaussian profiles. The base templates come from FSPS-Cloudy simulations (`Byler et al. 2017 <https://ui.adsabs.harvard.edu/abs/2017ApJ...840...44B/abstract>`_), which tabulate emission line flux ratios under various gas metallicities.
+
+Two flux calibration modes are supported:
+
+- **Hα-calibrated mode**: If an observed Hα flux is provided, the spectrum is scaled accordingly.
+- **SFR-calibrated mode**: If no Hα flux is given but `sfr`, `z`, and `vpec` are provided, the Hα luminosity is inferred via the `Kennicutt (1998) <https://ui.adsabs.harvard.edu/abs/1998ARA%26A..36..189K/abstract>`_ relation.
 
 Emission Line Generation
 ------------------------
 
-The emission line generation is carried out by employing a series of Gaussian functions to represent the emission lines 
-of ionized gas. In our generation, we considered 84 emission lines spanning from :math:`900\mathring{A}` to 
-:math:`10500\mathring{A}`. The profile of an emission line can be described as follows:
+Each emission line is represented by a Gaussian function:
 
 .. math::
 
-    \mathcal{E}(\lambda) = \frac{1}{\sigma_\text{line}\sqrt{2\pi}}\exp\left[\frac{-(\lambda - \lambda_\text{line})^2}{2\sigma_\text{line}^2}\right]
+   \mathcal{E}(\lambda) = \frac{1}{\sigma_{\rm line} \sqrt{2\pi}} \exp\left[ -\frac{(\lambda - \lambda_{\rm line})^2}{2\sigma_{\rm line}^2} \right]
 
-where :math:`\lambda_\text{line}` is the wavelength of the line center for the emission line, 
-and :math:`\sigma_\text{line}` is the line width of emission lines which is determined by the 
-velocity dispersion of ionized gas (:math:`\sigma_\text{v}`):
+where :math:`\sigma_{\rm line}` is the line width in wavelength space, computed from the velocity dispersion :math:`\sigma_v` via:
 
 .. math::
 
-    \sigma_\text{line} = \frac{\sigma_\text{v}}{c}\lambda_i
+   \sigma_{\rm line} = \frac{\sigma_v}{c} \lambda
 
-The composite spectra of ionized gas are the combination of all single emission lines:
+The total spectrum is given by the weighted sum of all lines:
 
 .. math::
 
-    \mathcal{S}(\lambda) = \sum^{N}_{i}\mathcal{L}_i\mathcal{E}_i(\lambda)
+   \mathcal{S}(\lambda) = \sum_i \mathcal{L}_i \mathcal{E}_i(\lambda)
 
-where :math:`\mathcal{L}_i` is the relative flux of :math:`i`th emission lines compared to :math:`\text{H}\alpha` flux, 
-and the :math:`\mathcal{E}_i(\lambda)` is the profile of :math:`i`th emission lines.
+where :math:`\mathcal{L}_i` is the flux of the :math:`i`th line relative to Hα, determined from the model template.
 
-Relative Flux Determination
----------------------------
+Template Selection
+------------------
 
-The relative flux of the emission lines is determined through the emission line model. We adopt the emission line model 
-provided by [Byler2017]_, who used ``Cloudy`` to simulate the emission line flux ratios in a star-forming region ionized 
-by a young stellar cluster. In their simulation, the emission line flux ratios depend on the gas-phase metallicity, 
-age of the stellar cluster, and ionization parameter. For convenience, we only use metallicity (``logz``) as the sole 
-input parameter to determine the relative fluxes of each emission line, while the age of the star cluster and ionization 
-parameter adopt a typical fixed value :math:`10^6\text{yrs}` and :math:`\log U = -2`.
+The emission line templates are selected based on gas-phase metallicity (`logz`). Available models include:
 
-Reddening and Redshift Effects
------------------------------
+- ``'hii'``: HII region templates based on FSPS + Cloudy simulations.
+- ``'nlr'``: Narrow-line region templates for AGN (used in other modules).
 
-For the emission lines of ionized gas, the treatment methods for reddening and redshift effects are the same as those for 
-the stellar continuum. It is achieved by using the dust extinction (``ebv``) and the line-of-sight velocity of the gas (``vel``) 
-as input parameters through Equation \ref{eq:reddening} and Equation \ref{eq:redshift}. The absolute flux of the emission 
-lines of ionized gas is scaled according to the input integral flux of the :math:`\text{H}\alpha` emission line (``halpha``).
+The nearest metallicity grid point is used; no interpolation is performed. The range of supported metallicity is:
+
+.. math::
+
+   \log Z/Z_\odot \in [-2.0, 0.5]
+
+Inputs outside this range will be clipped with a warning.
+
+Velocity Broadening
+-------------------
+
+Line broadening due to gas velocity dispersion is applied using a pixel-wise Gaussian convolution:
+
+- The intrinsic resolution of the line template is deconvolved from the target dispersion.
+- The convolution kernel is constructed per pixel using an adaptive window.
+- This process is implemented in the `gaussian_filter1d` function.
+
+Dust Attenuation
+----------------
+
+Dust extinction is applied using the `Calzetti et al. (2000) <https://ui.adsabs.harvard.edu/abs/2000ApJ...533..682C/abstract>`_ attenuation law:
+
+.. math::
+
+   F_{\rm obs}(\lambda) = F_{\rm int}(\lambda) \cdot 10^{-0.4 \cdot E(B-V) \cdot k(\lambda)}
+
+where :math:`k(\lambda)` is the extinction curve derived from the input `ebv` and `Rv` parameters. This reddening is applied to the entire line spectrum prior to flux calibration.
+
+Redshift and Peculiar Velocity
+------------------------------
+
+The line-of-sight redshift of the emission spectrum is determined by either:
+
+- the input `vel` (if `sfr` is not used), or
+- the cosmological + peculiar velocity (`z`, `vpec`) if using SFR-based calibration:
+
+.. math::
+
+   v_{\rm los} = (1 + z) \cdot v_{\rm pec} + z \cdot c
+
+The final spectrum is shifted accordingly using spline interpolation in wavelength space.
+
+SFR-Calibrated Mode
+-------------------
+
+If the Hα flux is not given, the model estimates the Hα luminosity using:
+
+.. math::
+
+   L({\rm H}\alpha) = 7.9 \times 10^{41} \cdot {\rm SFR}~[\text{erg/s}]
+
+This is converted to observed flux using the luminosity distance derived from redshift:
+
+.. math::
+
+   F_{\rm obs} = \frac{L({\rm H}\alpha)}{4\pi D_L^2 (1+z)^4}
+
+Here, the :math:`(1+z)^4` term accounts for cosmological surface brightness dimming. The emission line spectrum is then scaled to match this predicted Hα flux.
+
+Output Spectrum
+---------------
+
+The final synthetic spectrum includes:
+
+- Proper flux calibration (via Hα or SFR),
+- Dust attenuation,
+- Gaussian broadening by velocity dispersion,
+- Redshift and Doppler shift,
+- Wavelength resampling onto the user-defined grid (`config.wave`).
+
+All emission lines are modeled together and returned as a 1D array representing the final observed-frame flux.
+
+``HII_Region`` is designed to be used in both single-spectrum and datacube simulations.
