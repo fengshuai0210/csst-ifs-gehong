@@ -23,6 +23,9 @@ The ``cube3d`` module automatically distinguishes the type of input (stellar or 
 (``StellarPopulationMap``, ``IonizedGasMap``, etc.), and calls the corresponding model to simulate the spectrum. The wavelength 
 grid is shared across all components and defined by the configuration object.
 
+.. image:: /_static/image/gehong_framework.png
+   :align: center
+
 Component Combination
 ----------------------
 
