@@ -270,3 +270,4 @@ class Cube3D:
 
         hdulist = fits.HDUList([hdu0, hdu1])
         hdulist.writeto(os.path.join(path, filename), overwrite=True)
+

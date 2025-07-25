@@ -1,4 +1,5 @@
-data_path = 'GEHONG_DATA_PATH'
+data_path = 'GEHONG_PATH'
+
 
 def readcol(filename, **kwargs):
     """
