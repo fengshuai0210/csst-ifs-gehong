@@ -96,7 +96,7 @@ Project Info
 - **Institute**: Hebei Normal University  
 - **Contact**: sfeng@hebtu.edu.cn  
 - **Version**: 3.1.0 
-- **Last Updated**: 2025-07-30  
+- **Last Updated**: 2025-07-25 
 - **License**: MIT  
 - **GitHub**: https://github.com/fengshuai0210/csst-ifs-gehong  
 - **Documentation**: https://csst-ifs-gehong.readthedocs.io/  
