@@ -84,6 +84,7 @@ These datacubes can serve as inputs for:
    :caption: 📄 About
    :hidden:
 
+   logo.rst
    changelog.rst
    license.rst
    cite.rst
