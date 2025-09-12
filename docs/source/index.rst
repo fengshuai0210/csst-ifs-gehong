@@ -101,3 +101,8 @@ Project Info
 - **License**: MIT  
 - **GitHub**: https://github.com/fengshuai0210/csst-ifs-gehong  
 - **Documentation**: https://csst-ifs-gehong.readthedocs.io/  
+
+This project is supported by the CSST scientific data processing and 
+analysis system of the China Manned Space Project, Shanghai Academic/Technology 
+Research Leader (22XD1404200), the National Key R\&D Program of China 
+(No 2022YFF0503402 ) and  the China Manned Space Project with No. CMS-CSST-2025-A07.
